@@ -47,6 +47,14 @@ const page1styling = StyleSheet.create({
         fontFamily: 'open sans',
         fontWeight: 'bold',
     },
+    buttonTest:
+    {
+        backgroundColor:'#4772FF',
+        width: '90%',
+        height: '8%',
+        borderRadius: 15,
+        marginTop:5
+    }
 });
 
 export default page1styling;

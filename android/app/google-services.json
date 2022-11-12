@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "960617232634",
+    "project_id": "cabshare-44794",
+    "storage_bucket": "cabshare-44794.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960617232634:android:75671625b4f23a31def143",
+        "android_client_info": {
+          "package_name": "com.cabshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960617232634-bsqh711242s9a9urho22llghblsbf7cj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cabshare",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "960617232634-3u8im9oqma82kcivg4s25gcuiiovahgt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApR7phju5FlR2Hi6bWvfW5GyM9ANWSTwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960617232634-3u8im9oqma82kcivg4s25gcuiiovahgt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

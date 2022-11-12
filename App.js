@@ -2,8 +2,8 @@
 import * as React from 'react';
 import {View} from 'react-native';
 import Page1 from './screen/page1';
-import Page2 from './screen/page2';
-
+/* import Page2 from './screen/page2'; */
+import Page2 from './screen/page2'
 /* These two libraries were imported to allow navigation in the application. Stack navigation was used to move from one page to another.*/
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
