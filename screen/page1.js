@@ -20,6 +20,7 @@ export default function Page1({ navigation }) {
       <TouchableOpacity style = {page1styling.button} title="Go to Page#2"
 
         /* The onPress function takes the user to second page of the application when the button is pressed. 'Select category' is the name of the page to which we have to go when he button is pressed.  */
+        /* The onPress function takes the user to second page of the application when the button is pressed. 'Select category' is the name of the page to which we have to go when he button is pressed.  */
         onPress={() => navigation.navigate('Select Category')}>
         <View>
             <Text style = {page1styling.buttonText}>
