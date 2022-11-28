@@ -27,7 +27,10 @@ export default function Page1({ navigation }) {
     measurementId: "G-measurement-id",
   };
 
-  firebase.initializeApp(firebaseConfig);
+  if (!firebase.apps.length) 
+  {
+    firebase.initializeApp(firebaseConfig);
+  }
 
   const [useData, setUserData] = useState({})
 
@@ -96,7 +99,7 @@ export default function Page1({ navigation }) {
             {
               console.log(res.user)
               setUserData(res.user)
-              navigation.navigate('Select Category' , {name : res.user.displayName})
+              navigation.navigate('Select Category' , {name : res.user.displayName ,imageURL : res.user.photoURL , signout : signOut})
             }
             else
             {

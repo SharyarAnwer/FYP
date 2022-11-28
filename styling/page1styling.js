@@ -54,7 +54,7 @@ const page1styling = StyleSheet.create({
         height: '8%',
         borderRadius: 15,
         marginTop:5
-    }
+    },
 });
 
 export default page1styling;
