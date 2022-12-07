@@ -4,9 +4,12 @@ import {View} from 'react-native';
 import Page1 from './screen/page1';
 /* import Page2 from './screen/page2'; */
 import Page2 from './screen/page2'
+
+import DriverInfo from './screen/DriverInfo'
 /* These two libraries were imported to allow navigation in the application. Stack navigation was used to move from one page to another.*/
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import PassengerContact from './screen/PassengerContact';
 
 export default function App() {
   /*  */
@@ -25,7 +28,13 @@ export default function App() {
 
         {/* Select category screen will come next when the user taps on 'Let's Go' Button. The mecahnism of going to the next screen is defined in page1.js file.*/}
         {/* Initially a header was shown on the top of page 2. It was not needed. So to remove the header we used options={{ headerShown: false}}.*/}
+        
         <Stack.Screen options={{ headerShown: false}} name="Select Category" component={Page2} />
+        
+        <Stack.Screen options={{ headerShown: false}} name="Driver Info" component={DriverInfo} />
+
+        <Stack.Screen options={{ headerShown: false}} name="Passenger Contact" component={PassengerContact} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

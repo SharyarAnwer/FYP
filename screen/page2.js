@@ -11,8 +11,8 @@ Shapes offered by this library are divided into many categories. Ant design is o
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import { useNavigation } from '@react-navigation/native';
-
+import {useNavigation} from '@react-navigation/native';
+import {Navigation} from 'react-native-navigation'
 /*Allows us to use google sign in functionality.  */
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
@@ -24,9 +24,9 @@ import {useRoute} from '@react-navigation/native';
 
 import Dropdown from '../components/dropdown';
 import {FadeOutToBottomAndroidSpec} from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionSpecs';
+import DriverInfo from './DriverInfo';
 
 export default function Page2() {
-
   const navigation = useNavigation();
 
   const route = useRoute();
@@ -39,7 +39,9 @@ export default function Page2() {
     <View style={page2styling.view}>
       {/* <Text>{route.params.name}</Text> */}
       {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
-      <TouchableOpacity style={page2styling.button1}>
+      <TouchableOpacity
+        style={page2styling.button1}
+        onPress={ () => {navigation.navigate('Passenger Contact')} }>
         <View style={page2styling.i_need_a_ride_button}>
           <Text style={page2styling.buttonText1}>I need a ride</Text>
 
@@ -55,7 +57,8 @@ export default function Page2() {
       </TouchableOpacity>
 
       {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
-      <TouchableOpacity style={page2styling.button2}>
+      <TouchableOpacity style={page2styling.button2}
+      onPress={ () => {navigation.navigate('Driver Info')} }>
         <View style={page2styling.i_am_driving_button}>
           <Text style={page2styling.buttonText2}>I am driving</Text>
 
@@ -85,7 +88,6 @@ export default function Page2() {
         style={page2styling.signOutButton}
         /* onPress={route.params.signout} */
         onPress={() => setOption(!option)}>
-        
         <Image style={page2styling.signOutButton1} source={{uri: imageUrl}} />
       </TouchableOpacity>
 
@@ -100,7 +102,10 @@ export default function Page2() {
             size={30}></AntDesign>
           <TouchableOpacity
             style={page2styling.option1}
-            onPress={() =>{route.params.signout() ; navigation.popToTop()}}>
+            onPress={() => {
+              route.params.signout();
+              navigation.popToTop();
+            }}>
             <MaterialIcons
               name="logout"
               color={'#fff'}

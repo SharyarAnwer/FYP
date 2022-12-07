@@ -16,6 +16,8 @@ import auth , { firebase } from '@react-native-firebase/auth';
 /* React function based component was used. Export default function exports the Page1 so that it can be used by other .js files.*/
 export default function Page1({ navigation }) {
 
+  
+
   var firebaseConfig = {
     apiKey: "AIzaSyApR7phju5FlR2Hi6bWvfW5GyM9ANWSTwI",
     authDomain: "cabshare-44794.firebaseapp.com",
