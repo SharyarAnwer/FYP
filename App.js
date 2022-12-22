@@ -10,6 +10,9 @@ import DriverInfo from './screen/DriverInfo'
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PassengerContact from './screen/PassengerContact';
+import Verification from './screen/Verification';
+
+import auth from '@react-native-firebase/auth';
 
 export default function App() {
   /*  */
@@ -34,6 +37,8 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false}} name="Driver Info" component={DriverInfo} />
 
         <Stack.Screen options={{ headerShown: false}} name="Passenger Contact" component={PassengerContact} />
+
+        <Stack.Screen options={{ headerShown: false}} name="Verification" component={Verification} />
 
       </Stack.Navigator>
     </NavigationContainer>
