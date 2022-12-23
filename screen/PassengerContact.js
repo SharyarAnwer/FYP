@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Button,
   SafeAreaView,
@@ -13,8 +13,12 @@ import Splash from 'react-native-vector-icons/MaterialIcons';
 import styles from '../styling/PassengerContactStyle';
 import Dropdown2 from '../components/dropdown2';
 import {useNavigation} from '@react-navigation/native';
+import {PraticeProvider , PracticeContext } from '../Global/PracticeContext';
 
 const PassengerContact = ({route}) => {
+
+  const {code1, setCode1} = useContext(PracticeContext)
+
   const navigation = useNavigation();
 
   const [phoneData, setData] = useState('');
@@ -44,6 +48,11 @@ const PassengerContact = ({route}) => {
     console.log(user.phoneNumber, 'user');
   }
 
+  function check()
+  {
+    console.log("I WORKED")  
+  }
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
@@ -56,17 +65,20 @@ const PassengerContact = ({route}) => {
   }
 
   async function confirmCode() {
+    console.log("I  here maybe")
     try {
-      await confirm.confirm(code);
+      console.log("I came in the try section")
+      await confirm.confirm(code1)
+        console.log("I came null")
       /* console.log('I was printed' + confirm.confirm(code.phoneNumber)); */
-      console.log('I Am The OTP' + code);
+      console.log('I Am The OTP' + code1);
     } catch (error) {
-      console.log(code)
+      console.log(code1)
       console.log('Invalid code.' + error);
     }
   }
 
-  /* if (!confirm) { */
+ if (!confirm) { 
     return (
       <View style={styles.container}>
         <SafeAreaView style={styles.headerWrapper}>
@@ -128,9 +140,9 @@ const PassengerContact = ({route}) => {
                 } else {
                   signInWithPhoneNumber(phoneData)
                 }
-                /* signInWithPhoneNumber(phoneData) */
-                /* signInWithPhoneNumber('+92 3462730440') */
-                navigation.navigate('Verification');
+                
+                /* console.log("Code1",code1) */
+                //navigation.navigate('Verification' , {confirmcode : confirmCode , checkFunc : check});
                 /* console.log(phoneData.charAt(3) == '0') */
               }}>
               <Icon name="arrow-right" size={25} style={styles.iconButton} />
@@ -139,14 +151,14 @@ const PassengerContact = ({route}) => {
         </View>
       </View>
     );
-  /* } */
-  /* else
+} 
+  else
   {return (
     <>
-      <TextInput value={code} onChangeText={text => setCode(text)} />
+      <TextInput value={code1} onChangeText={text => setCode1(text)} />
       <Button title="Confirm Code" onPress={() => confirmCode()} />
     </>
-  );} */
+  );} 
 };
 
 export default PassengerContact;

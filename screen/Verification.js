@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,11 +9,16 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
-
 import {useRoute} from '@react-navigation/native';
+import {PraticeProvider , PracticeContext } from '../Global/PracticeContext';
 
 export default function Verification(props) {
+
+  
+  const {code1, setCode1} = useContext(PracticeContext)
+
   const route = useRoute();
+  const { confirmcode, checkFunc } = route.params;
 
   const navigation = useNavigation();
 
@@ -223,8 +228,12 @@ export default function Verification(props) {
             style={styles.buttonVerify}
             onPress={() => 
             {
-              let typedOTP = number1.toString() + number2.toString() + number3.toString() + number4.toString() + number5.toString() + number6.toString()
-              console.log(typedOTP)
+              setCode1(number1.toString() + number2.toString() + number3.toString() + number4.toString() + number5.toString() + number6.toString())
+
+              /* setCode1(typedOTP) */
+              /* console.log(typeof code1) */
+
+              confirmcode()
             }}>
             <Text style={styles.textButtonVerify}>Verify</Text>
           </TouchableOpacity>
