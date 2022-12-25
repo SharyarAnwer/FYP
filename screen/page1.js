@@ -101,7 +101,7 @@ export default function Page1({ navigation }) {
             {
               console.log(res.user)
               setUserData(res.user)
-              navigation.navigate('Select Category' , {name : res.user.displayName ,imageURL : res.user.photoURL , signout : signOut})
+              navigation.navigate('Select Category' , {name : res.user.displayName ,imageURL : res.user.photoURL , email: res.user.email ,signout : signOut})
             }
             else
             {
