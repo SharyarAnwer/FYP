@@ -7,7 +7,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Vibration,
+  Alert,
+  TouchableNativeFeedback,
+  Animated
 } from 'react-native';
+
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/Feather';
 import Splash from 'react-native-vector-icons/MaterialIcons';
@@ -20,6 +25,26 @@ import Svg, {Path} from 'react-native-svg';
 import {useRoute} from '@react-navigation/native';
 
 const PassengerContact = () => {
+
+  const [offset] = useState(new Animated.Value(0));
+
+  const handlePress = () => {
+    // Vibrate the view by animating the offset
+    Animated.timing(offset, {
+      toValue: 10,
+      duration: 50,
+      useNativeDriver: true,
+    }).start();
+
+    setTimeout(() => {
+      // Return the view to its original position
+      Animated.timing(offset, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true,
+      }).start();
+    }, 50);
+  };
   const route = useRoute();
 
   const name = route.params.name;
@@ -90,6 +115,9 @@ const PassengerContact = () => {
       setNumber5('')
       setNumber6('')
       setOTP(1)
+      handlePress()
+      Vibration.vibrate()
+      Alert.alert("OTP You Entered Is Wrong. Please Try Again")
       console.log('Invalid code.' + error);
     }
   }
@@ -335,7 +363,7 @@ const PassengerContact = () => {
               Please type the verification code send to your name:
             </Text>
 
-            <View style={confirmStyle.otpWrapper}>
+            <Animated.View style={[confirmStyle.otpWrapper , {transform: [{ translateX: offset }]}]}>
               <View
                 style={[confirmStyle.otpButton, {backgroundColor: '#7788ef'}]}
                 >
@@ -390,7 +418,7 @@ const PassengerContact = () => {
                   {number6}
                 </Text>
               </View>
-            </View>
+            </Animated.View>
 
             <View style={confirmStyle.buttonWrapper}>
               <TouchableOpacity>

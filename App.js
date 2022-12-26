@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as React from 'react';
-import {View} from 'react-native';
+import {View , LogBox} from 'react-native';
 import Page1 from './screen/page1';
 /* import Page2 from './screen/page2'; */
 import Page2 from './screen/page2';
@@ -18,6 +18,10 @@ import {PraticeProvider , PracticeContext} from './Global/PracticeContext';
 export default function App() {
   /*  */
   const Stack = createNativeStackNavigator();
+
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
 
   return (
     <PraticeProvider>
