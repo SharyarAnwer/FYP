@@ -304,6 +304,30 @@ const PassengerContact = () => {
   if (!confirm) {
     return (
       <View style={styles.container}>
+        <ModalPopup visible={visible}>
+          <View style={{alignItems: 'center'}}>
+            <View style={modalStyles.header}>
+              <TouchableOpacity onPress={() => setVisible(false)}>
+                <Image
+                  source={require('../Assets/remove.png')}
+                  style={{height: 30, width: 30}}></Image>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{alignItems: 'center'}}>
+            <Image
+              //source={require('../Assets/check.png')}
+              source={imgSource}
+              style={{height: 150, width: 150, marginVertical: 10}}
+            />
+          </View>
+
+          <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
+            {otpMessage}
+          </Text>
+        </ModalPopup>
+
         <SafeAreaView style={styles.headerWrapper}>
           <View style={styles.header}>
             <TouchableOpacity
@@ -357,7 +381,10 @@ const PassengerContact = () => {
               onPress={() => {
                 title = 'Phone Number Sign In';
                 if (phoneData.length < 1) {
-                  Alert.alert('Plz enter your contact number.');
+                  setImgSource(require('../Assets/sim-card.png'))
+                  setOtpMessage("You cannot leave the input field empty")
+                  setVisible(true)
+                  //Alert.alert('Plz enter your contact number.');
                 } else {
                   if (phoneData.charAt(3) == '0') {
                     var str = phoneData;
@@ -400,7 +427,6 @@ const PassengerContact = () => {
 
           <View style={{alignItems: 'center'}}>
             <Image
-              //source={require('../Assets/check.png')}
               source={imgSource}
               style={{height: 150, width: 150, marginVertical: 10}}
             />
