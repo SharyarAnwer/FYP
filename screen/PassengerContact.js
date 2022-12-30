@@ -1,5 +1,6 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import {
+  Image,
   Button,
   SafeAreaView,
   TextInput,
@@ -10,7 +11,8 @@ import {
   Vibration,
   Alert,
   TouchableNativeFeedback,
-  Animated
+  Animated,
+  Modal,
 } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
@@ -23,8 +25,59 @@ import {PraticeProvider, PracticeContext} from '../Global/PracticeContext';
 
 import Svg, {Path} from 'react-native-svg';
 import {useRoute} from '@react-navigation/native';
+import {transform} from '@babel/core';
+//import ModalPopup from '../components/ModalPopup';
+
+
+const ModalPopup = ({visible, children}) => {
+  const [showModal, setShowModal] = useState(visible);
+  const scaleValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    toggleModal();
+  }, [visible]);
+
+  const toggleModal = () => {
+    if (visible) {
+      setShowModal(true);
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setTimeout(() => {
+        setShowModal(false);
+      }, 200);
+      Animated.timing(scaleValue, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+  return (
+    <Modal transparent visible={showModal}>
+      <View style={modalStyles.modalBackground}>
+        <Animated.View
+          style={[
+            modalStyles.modalContainer,
+            {transform: [{scale: scaleValue}]},
+          ]}>
+          {children}
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+};
+
 
 const PassengerContact = () => {
+  /*  */
+  const [visible, setVisible] = useState(false);
+  const [imgSource, setImgSource] = useState(require('../Assets/check.png'));
+  const [otpMessage, setOtpMessage] = useState('');
+  /*  */
 
   const [offset] = useState(new Animated.Value(0));
 
@@ -61,19 +114,18 @@ const PassengerContact = () => {
     setData(data);
   };
 
-  
   useEffect(() => {
     console.log('I am the real phone number' + phoneData);
   }, [phoneData]);
-  
+
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
-  
+
   const [code, setCode] = useState('');
-  
+
   useEffect(() => {
-    setCode(code)
-  }, [code , number1 , number2 , number3 , number4 , number5 , number6]);
+    setCode(code);
+  }, [code, number1, number2, number3, number4, number5, number6]);
 
   const getOTP = otp => {
     setCode(otp);
@@ -102,22 +154,27 @@ const PassengerContact = () => {
   async function confirmCode() {
     try {
       await confirm.confirm(code);
+      setImgSource(require('../Assets/check.png'));
+      setOtpMessage('Congratulations! Your OTP has been verified!');
+      setVisible(true);
       //console.log('I came null');
       //console.log('I was printed' + confirm.confirm(code.phoneNumber));
       console.log('I Am The OTP' + code);
     } catch (error) {
       console.log(code);
-      setCode('')
-      setNumber1('')
-      setNumber2('')
-      setNumber3('')
-      setNumber4('')
-      setNumber5('')
-      setNumber6('')
-      setOTP(1)
-      handlePress()
-      Vibration.vibrate()
-      Alert.alert("OTP You Entered Is Wrong. Please Try Again")
+      setCode('');
+      setNumber1('');
+      setNumber2('');
+      setNumber3('');
+      setNumber4('');
+      setNumber5('');
+      setNumber6('');
+      setOTP(1);
+      setImgSource(require('../Assets/error.png'));
+      setOtpMessage('Sorry. We could not verify your OTP! Please try again');
+      setVisible(true);
+      handlePress();
+      Vibration.vibrate();
       console.log('Invalid code.' + error);
     }
   }
@@ -299,12 +356,16 @@ const PassengerContact = () => {
               title="Phone Number Sign In"
               onPress={() => {
                 title = 'Phone Number Sign In';
-                if (phoneData.charAt(3) == '0') {
-                  var str = phoneData;
-                  str = str.slice(0, 3) + ' ' + str.slice(4);
-                  signInWithPhoneNumber(str);
+                if (phoneData.length < 1) {
+                  Alert.alert('Plz enter your contact number.');
                 } else {
-                  signInWithPhoneNumber(phoneData);
+                  if (phoneData.charAt(3) == '0') {
+                    var str = phoneData;
+                    str = str.slice(0, 3) + ' ' + str.slice(4);
+                    signInWithPhoneNumber(str);
+                  } else {
+                    signInWithPhoneNumber(phoneData);
+                  }
                 }
 
                 /* console.log("Code1",code1) */
@@ -324,6 +385,31 @@ const PassengerContact = () => {
        <TextInput value={code} onChangeText={text => setCode(text)} />
       <Button title="Confirm Code" onPress={() => confirmCode()} />
       {/* IF SHIT BREAKS DOWN. UNCOMMIT THIS SECTION */}
+
+        {/* <ModalPopup visible={visible} imgSource = {imgSource} otpMessage = {otpMessage}> */}
+        <ModalPopup visible={visible}>
+          <View style={{alignItems: 'center'}}>
+            <View style={modalStyles.header}>
+              <TouchableOpacity onPress={() => setVisible(false)}>
+                <Image
+                  source={require('../Assets/remove.png')}
+                  style={{height: 30, width: 30}}></Image>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{alignItems: 'center'}}>
+            <Image
+              //source={require('../Assets/check.png')}
+              source={imgSource}
+              style={{height: 150, width: 150, marginVertical: 10}}
+            />
+          </View>
+
+          <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
+            {otpMessage}
+          </Text>
+        </ModalPopup>
 
         <View style={confirmStyle.container}>
           <SafeAreaView>
@@ -363,10 +449,13 @@ const PassengerContact = () => {
               Please type the verification code send to your name:
             </Text>
 
-            <Animated.View style={[confirmStyle.otpWrapper , {transform: [{ translateX: offset }]}]}>
+            <Animated.View
+              style={[
+                confirmStyle.otpWrapper,
+                {transform: [{translateX: offset}]},
+              ]}>
               <View
-                style={[confirmStyle.otpButton, {backgroundColor: '#7788ef'}]}
-                >
+                style={[confirmStyle.otpButton, {backgroundColor: '#7788ef'}]}>
                 <Text style={[confirmStyle.textOtp, {color: '#fff'}]}>
                   {number1}
                 </Text>
@@ -430,11 +519,11 @@ const PassengerContact = () => {
               <TouchableOpacity
                 style={confirmStyle.buttonVerify}
                 onPress={() => {
-
                   console.log('Value of code: ' + code);
                   console.log('Type of code: ' + typeof code);
 
                   confirmCode();
+                  //setVisible(true);
                 }}>
                 <Text style={confirmStyle.textButtonVerify}>Verify</Text>
               </TouchableOpacity>
@@ -451,27 +540,27 @@ const PassengerContact = () => {
                           style={confirmStyle.numPad}
                           onPress={() => {
                             if (OTP == 1) {
-                              setCode(code + numbers.toString())
+                              setCode(code + numbers.toString());
                               setNumber1(numbers);
                               setOTP(2);
                             } else if (OTP == 2) {
-                              setCode(code + numbers.toString())
+                              setCode(code + numbers.toString());
                               setNumber2(numbers);
                               setOTP(3);
                             } else if (OTP == 3) {
-                              setCode(code + numbers.toString())
+                              setCode(code + numbers.toString());
                               setNumber3(numbers);
                               setOTP(4);
                             } else if (OTP == 4) {
-                              setCode(code + numbers.toString())
+                              setCode(code + numbers.toString());
                               setNumber4(numbers);
                               setOTP(5);
                             } else if (OTP == 5) {
-                              setCode(code + numbers.toString())
+                              setCode(code + numbers.toString());
                               setNumber5(numbers);
                               setOTP(6);
                             } else if (OTP == 6) {
-                              setCode(code + numbers.toString())
+                              setCode(code + numbers.toString());
                               setNumber6(numbers);
                               setOTP(7);
                             }
@@ -551,4 +640,26 @@ const PassengerContact = () => {
   }
 };
 
+const modalStyles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 20,
+    elevation: 20,
+  },
+  header: {
+    width: '100%',
+    height: 40,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+});
 export default PassengerContact;
