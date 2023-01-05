@@ -608,21 +608,27 @@ const PassengerContact = () => {
                   style={confirmStyle.numPad}
                   onPress={() => {
                     if (OTP == 1) {
+                      setCode(code + '0');
                       setNumber1(0);
                       setOTP(2);
                     } else if (OTP == 2) {
+                      setCode(code + '0');
                       setNumber2(0);
                       setOTP(3);
                     } else if (OTP == 3) {
+                      setCode(code + '0');
                       setNumber3(0);
                       setOTP(4);
                     } else if (OTP == 4) {
+                      setCode(code + '0');
                       setNumber4(0);
                       setOTP(5);
                     } else if (OTP == 5) {
+                      setCode(code + '0');
                       setNumber5(0);
                       setOTP(6);
                     } else if (OTP == 6) {
+                      setCode(code + '0');
                       setNumber6(0);
                       setOTP(7);
                     }
@@ -634,21 +640,27 @@ const PassengerContact = () => {
                   style={confirmStyle.numPad}
                   onPress={() => {
                     if (OTP == 7) {
+                      setCode(code.slice(0, -1));
                       setNumber6('');
                       setOTP(6);
                     } else if (OTP == 6) {
+                      setCode(code.slice(0, -1));
                       setNumber5('');
                       setOTP(5);
                     } else if (OTP == 5) {
+                      setCode(code.slice(0, -1));
                       setNumber4('');
                       setOTP(4);
                     } else if (OTP == 4) {
+                      setCode(code.slice(0, -1));
                       setNumber3('');
                       setOTP(3);
                     } else if (OTP == 3) {
+                      setCode(code.slice(0, -1));
                       setNumber2('');
                       setOTP(2);
                     } else if (OTP == 2) {
+                      setCode(code.slice(0, -1));
                       setNumber1('');
                       setOTP(1);
                     } else if (OTP < 2) {
