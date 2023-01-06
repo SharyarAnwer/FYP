@@ -13,7 +13,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 /*  */
 import auth , { firebase } from '@react-native-firebase/auth';
 
-import firestore from '@react-native-firebase/firestore';
+//import firestore from '@react-native-firebase/firestore';
 
 /* React function based component was used. Export default function exports the Page1 so that it can be used by other .js files.*/
 export default function Page1({ navigation }) {
@@ -36,7 +36,7 @@ export default function Page1({ navigation }) {
     firebase.initializeApp(firebaseConfig);
   }
 
-  firestore()
+  /* firestore()
   .collection('Users')
   .add({
     name: 'Shahryar Anwer',
@@ -44,7 +44,7 @@ export default function Page1({ navigation }) {
   })
   .then(() => {
     console.log('User added!');
-  });
+  }); */
 
   const [useData, setUserData] = useState({})
 

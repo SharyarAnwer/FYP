@@ -30,7 +30,6 @@ import {transform} from '@babel/core';
 
 import firestore from '@react-native-firebase/firestore';
 
-
 const ModalPopup = ({visible, children}) => {
   const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
@@ -73,11 +72,7 @@ const ModalPopup = ({visible, children}) => {
   );
 };
 
-
 const PassengerContact = () => {
-
-  
-
   /*  */
   const [visible, setVisible] = useState(false);
   const [imgSource, setImgSource] = useState(require('../Assets/check.png'));
@@ -109,7 +104,7 @@ const PassengerContact = () => {
   const image = route.params.image;
   const email = route.params.email;
 
-  const {code1, setCode1} = useContext(PracticeContext);
+  //const {code1, setCode1} = useContext(PracticeContext);
 
   const navigation = useNavigation();
 
@@ -119,35 +114,36 @@ const PassengerContact = () => {
     setData(data);
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log('I am the real phone number' + phoneData);
-  }, [phoneData]);
+  }, [phoneData]); */
 
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
 
   const [code, setCode] = useState('');
 
-  useEffect(() => {
+  /* useEffect(() => {
     setCode(code);
-  }, [code, number1, number2, number3, number4, number5, number6]);
+  }, [code, number1, number2, number3, number4, number5, number6]); */
 
   const getOTP = otp => {
     setCode(otp);
   };
-  
+
+  let firebaseCounter = 0;
+
   // Handle user state changes
   function onAuthStateChanged(user) {
     //console.log(user, 'user');
     console.log('Name : ' + name);
     console.log('Email : ' + email);
     console.log('Mobile Number : ' + user.phoneNumber);
-    setData(user.phoneNumber)
-    firestore()
-    //console.log(user.phoneNumber, 'user');
+    setData(user.phoneNumber);
+
   }
 
-  firestore()
+  /* firestore()
   .collection('Users')
   .add({
     Name: name,
@@ -155,8 +151,8 @@ const PassengerContact = () => {
     Mobile_number: phoneData
   })
   .then(() => {
-    console.log('User added!');
-  });
+    console.log('User added successfully!');
+  }); */
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -175,6 +171,17 @@ const PassengerContact = () => {
       setImgSource(require('../Assets/check.png'));
       setOtpMessage('Congratulations! Your OTP has been verified!');
       setVisible(true);
+
+      firestore()
+      .collection('Users')
+      .add({
+        Name: name,
+        Email: email,
+        Mobile_number: phoneData,
+      })
+      .then(() => {
+        console.log('User added successfully!');
+      });
       //firestore()
       //console.log('I came null');
       //console.log('I was printed' + confirm.confirm(code.phoneNumber));
@@ -400,9 +407,9 @@ const PassengerContact = () => {
               onPress={() => {
                 title = 'Phone Number Sign In';
                 if (phoneData.length < 1) {
-                  setImgSource(require('../Assets/sim-card.png'))
-                  setOtpMessage("You cannot leave the input field empty")
-                  setVisible(true)
+                  setImgSource(require('../Assets/sim-card.png'));
+                  setOtpMessage('You cannot leave the input field empty');
+                  setVisible(true);
                   //Alert.alert('Plz enter your contact number.');
                 } else {
                   if (phoneData.charAt(3) == '0') {
