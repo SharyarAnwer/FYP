@@ -406,12 +406,15 @@ const PassengerContact = () => {
               title="Phone Number Sign In"
               onPress={() => {
                 title = 'Phone Number Sign In';
-                if (phoneData.length < 1) {
+                if (phoneData == '' || phoneData == null) {
+                  console.log("I AM EMPTY")
                   setImgSource(require('../Assets/sim-card.png'));
                   setOtpMessage('You cannot leave the input field empty');
                   setVisible(true);
                   //Alert.alert('Plz enter your contact number.');
-                } else {
+                } 
+                else 
+                {
                   if (phoneData.charAt(3) == '0') {
                     var str = phoneData;
                     str = str.slice(0, 3) + ' ' + str.slice(4);
