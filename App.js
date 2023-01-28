@@ -14,6 +14,7 @@ import Verification from './screen/Verification';
 
 import auth from '@react-native-firebase/auth';
 import {PraticeProvider , PracticeContext} from './Global/PracticeContext';
+import Booking from './screen/Booking';
 
 export default function App() {
   /*  */
@@ -63,6 +64,12 @@ export default function App() {
             options={{headerShown: false}}
             name="Verification"
             component={Verification}
+          />
+
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Book A Ride"
+            component={Booking}
           />
         </Stack.Navigator>
       </NavigationContainer>

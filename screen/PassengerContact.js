@@ -29,6 +29,7 @@ import {transform} from '@babel/core';
 //import ModalPopup from '../components/ModalPopup';
 
 import firestore from '@react-native-firebase/firestore';
+import Loader from './Loader';
 
 const ModalPopup = ({visible, children}) => {
   const [showModal, setShowModal] = useState(visible);
@@ -78,6 +79,9 @@ const PassengerContact = () => {
   const [imgSource, setImgSource] = useState(require('../Assets/check.png'));
   const [otpMessage, setOtpMessage] = useState('');
   /*  */
+
+  /* USED TO BRING UP THE LOADER WHEN THE NEXT SCREENS ARE LOADING */
+  const [loader, setLoader] = useState(false);
 
   const [offset] = useState(new Animated.Value(0));
 
@@ -140,7 +144,6 @@ const PassengerContact = () => {
     console.log('Email : ' + email);
     console.log('Mobile Number : ' + user.phoneNumber);
     setData(user.phoneNumber);
-
   }
 
   /* firestore()
@@ -161,7 +164,9 @@ const PassengerContact = () => {
 
   // Handle the button press
   async function signInWithPhoneNumber(phoneNumber) {
+    setLoader(true);
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    setLoader(false);
     setConfirm(confirmation);
   }
 
@@ -173,19 +178,20 @@ const PassengerContact = () => {
       setVisible(true);
 
       firestore()
-      .collection('Users')
-      .add({
-        Name: name,
-        Email: email,
-        Mobile_number: phoneData,
-      })
-      .then(() => {
-        console.log('User added successfully!');
-      });
+        .collection('Users')
+        .add({
+          Name: name,
+          Email: email,
+          Mobile_number: phoneData,
+        })
+        .then(() => {
+          console.log('User added successfully!');
+        });
+
       //firestore()
       //console.log('I came null');
       //console.log('I was printed' + confirm.confirm(code.phoneNumber));
-      console.log('I Am The OTP' + code);
+      //console.log('I Am The OTP' + code);
     } catch (error) {
       console.log(code);
       setCode('');
@@ -330,6 +336,9 @@ const PassengerContact = () => {
   if (!confirm) {
     return (
       <View style={styles.container}>
+        {/* KEEPS THE LOADER HIDDEN UNTIL LOADING IS NEEDED */}
+        {loader && <Loader />}
+
         <ModalPopup visible={visible}>
           <View style={{alignItems: 'center'}}>
             <View style={modalStyles.header}>
@@ -407,14 +416,12 @@ const PassengerContact = () => {
               onPress={() => {
                 title = 'Phone Number Sign In';
                 if (phoneData == '' || phoneData == null) {
-                  console.log("I AM EMPTY")
+                  console.log('I AM EMPTY');
                   setImgSource(require('../Assets/sim-card.png'));
                   setOtpMessage('You cannot leave the input field empty');
                   setVisible(true);
                   //Alert.alert('Plz enter your contact number.');
-                } 
-                else 
-                {
+                } else {
                   if (phoneData.charAt(3) == '0') {
                     var str = phoneData;
                     str = str.slice(0, 3) + ' ' + str.slice(4);
@@ -439,14 +446,20 @@ const PassengerContact = () => {
       <>
         {/* //THIS WAS THE ORIGINAL CODE
        <TextInput value={code} onChangeText={text => setCode(text)} />
-      <Button title="Confirm Code" onPress={() => confirmCode()} />
-      {/* IF SHIT BREAKS DOWN. UNCOMMIT THIS SECTION */}
+        <Button title="Confirm Code" onPress={() => confirmCode()} />
+        {/* IF SHIT BREAKS DOWN. UNCOMMIT THIS SECTION */}
 
         {/* <ModalPopup visible={visible} imgSource = {imgSource} otpMessage = {otpMessage}> */}
         <ModalPopup visible={visible}>
           <View style={{alignItems: 'center'}}>
             <View style={modalStyles.header}>
-              <TouchableOpacity onPress={() => setVisible(false)}>
+              <TouchableOpacity
+                onPress={() => {
+                  setVisible(false);
+                  setTimeout(() => {
+                    navigation.navigate('Book A Ride');
+                  }, 1000);
+                }}>
                 <Image
                   source={require('../Assets/remove.png')}
                   style={{height: 30, width: 30}}></Image>

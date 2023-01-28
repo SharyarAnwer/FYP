@@ -6,6 +6,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 dependencies {
    implementation 'com.android.support:multidex:1.0.3' //enter the latest version 
+   implementation 'com.facebook.fresco:animated-gif:2.5.0'
 }
 android {
   defaultConfig {
