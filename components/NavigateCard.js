@@ -19,7 +19,10 @@ export default function NavigateCard() {
                 onPress={(data, details = null) => {
                   console.log(data, details);
                 }}
+                GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                fetchDetails={true}
                 minLength={2}
+                returnKeyType = {"search"}
                 enablePoweredByContainer={false}
                 query={{
                   key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
