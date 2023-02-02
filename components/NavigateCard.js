@@ -1,5 +1,7 @@
 import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
 import React from 'react';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import {GOOGLE_MAPS_APIKEY} from "@env";
 
 export default function NavigateCard() {
   return (
@@ -7,7 +9,22 @@ export default function NavigateCard() {
       <Text style = {styles.heading}>Good Morning, Shahryar</Text>
       <View style = {styles.box1}>
         <View>
-            
+            <GooglePlacesAutocomplete
+              placeholder = "Pickup loaction"
+
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                console.log(data, details);
+              }}
+              
+              query={{
+                key: GOOGLE_MAPS_APIKEY,
+                language: 'en'
+              }}
+
+              nearbyPlaceAPI = "GooglePlacesSearch"
+              debounce = {400}
+            />
         </View>
       </View>
     </SafeAreaView>
