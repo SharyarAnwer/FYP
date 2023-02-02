@@ -37,7 +37,7 @@ export default function Booking() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   box1: {
     flex: 1,

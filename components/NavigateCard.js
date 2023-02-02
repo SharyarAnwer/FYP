@@ -1,35 +1,36 @@
-import {View, Text, SafeAreaView, StyleSheet, ScrollView} from 'react-native';
-import React from 'react';
+import {View, Text, SafeAreaView, StyleSheet, FlatList} from 'react-native';
+import React, {useState} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {GOOGLE_MAPS_APIKEY} from '@env';
 
 export default function NavigateCard() {
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Good Morning, Shahryar</Text>
       <View style={styles.box1}>
         <View>
-          <ScrollView
-            /*  contentContainerStyle={{flex: 1}} */
-            /* style={styles.modalContainer} */
+          <FlatList
+            data={[1]}
             keyboardShouldPersistTaps="always"
-            nestedScrollEnabled={true}
-            >
-            <GooglePlacesAutocomplete
-              placeholder="Pickup loaction"
-              /* onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-              }} */
-
-              query={{
-                key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
-                language: 'en',
-              }}
-              nearbyPlaceAPI="GooglePlacesSearch"
-              debounce={400}
-            />
-          </ScrollView>
+            renderItem={({item}) => (
+              <GooglePlacesAutocomplete
+                placeholder="Pickup location"
+                onPress={(data, details = null) => {
+                  console.log(data, details);
+                }}
+                minLength={2}
+                enablePoweredByContainer={false}
+                query={{
+                  key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
+                  language: 'en',
+                }}
+                nearbyPlaceAPI="GooglePlacesSearch"
+                debounce={400}
+              />
+            )}
+            keyExtractor={item => item.toString()}
+          />
         </View>
       </View>
     </SafeAreaView>
