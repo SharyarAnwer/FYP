@@ -3,6 +3,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import NavigateCard from '../components/NavigateCard';
 import RideOptionsCard from '../components/RideOptionsCard';
+import Map from '../components/Map';
 
 export default function Booking() {
   const Stack = createStackNavigator();
@@ -10,7 +11,7 @@ export default function Booking() {
   return (
     <View style={styles.container}>
       <View style={styles.box1}>
-        <Text>I AM WORKING</Text>
+        <Map/>
       </View>
 
       {/* <Stack.Navigator style={styles.box2}> */}
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
   },
   box1: {
     flex: 1,
-    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -49,5 +49,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
-  },
+  }
 });
