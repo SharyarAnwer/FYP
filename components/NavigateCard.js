@@ -1,9 +1,20 @@
 import {View, Text, SafeAreaView, StyleSheet, FlatList} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState , useContext, useEffect} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {GOOGLE_MAPS_APIKEY} from '@env';
+import LocationContext from '../Context/location/LocationContext';
 
 export default function NavigateCard() {
+
+  /* const mapLocation = useContext(LocationContext) */
+  
+  const [location , setLocation] = useContext(LocationContext)
+
+  useEffect(() => {
+    console.log("I AM FROM USE EFFECT")
+    console.log(location.latitude , location.longitude , location.description)
+  }, [location.latitude , location.longitude, location.description])
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -18,6 +29,30 @@ export default function NavigateCard() {
                 placeholder="Pickup location"
                 onPress={(data, details = null) => {
                   console.log(data, details);
+
+                  console.log("I am Latitude")
+                  console.log(details.geometry.location.lat)
+
+                  console.log("I am Longitude")
+                  console.log(details.geometry.location.lng)
+
+                  console.log(data.description)
+
+                  setLocation({
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng,
+                    description: data.description
+                  })
+
+                  console.log("I am Latitude")
+                  console.log(location.latitude)
+
+                  console.log("I am Longitude")
+                  console.log(location.longitude)
+
+                  console.log("Updated location")
+                  console.log(location.description)
+                  
                 }}
                 GooglePlacesDetailsQuery={{ fields: "geometry" }}
                 fetchDetails={true}
@@ -36,6 +71,7 @@ export default function NavigateCard() {
           />
         </View>
       </View>
+      <Text>Latitude : {location.latitude}</Text>
     </SafeAreaView>
   );
 }

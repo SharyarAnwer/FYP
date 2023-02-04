@@ -10,7 +10,6 @@ import Icon from 'react-native-vector-icons/Feather';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import {useRoute} from '@react-navigation/native';
-import {PraticeProvider , PracticeContext } from '../Global/PracticeContext';
 
 export default function Verification(props) {
 

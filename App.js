@@ -13,7 +13,7 @@ import PassengerContact from './screen/PassengerContact';
 import Verification from './screen/Verification';
 
 import auth from '@react-native-firebase/auth';
-import {PraticeProvider , PracticeContext} from './Global/PracticeContext';
+
 import Booking from './screen/Booking';
 
 export default function App() {
@@ -25,7 +25,7 @@ export default function App() {
   ]);
 
   return (
-    <PraticeProvider>
+    
       <NavigationContainer>
         <Stack.Navigator>
           {/* The above two tags: <NavigationContainer> & <Stack.Navigator> are used to tell the app that following screens will have to be navigated.*/}
@@ -73,6 +73,5 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </PraticeProvider>
   );
 }
