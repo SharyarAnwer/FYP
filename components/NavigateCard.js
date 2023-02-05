@@ -8,7 +8,7 @@ export default function NavigateCard() {
 
   /* const mapLocation = useContext(LocationContext) */
   
-  const [location , setLocation] = useContext(LocationContext)
+  const [location , setLocation, dropOffLocation, setDropOffLocation] = useContext(LocationContext)
 
   useEffect(() => {
     console.log("I AM FROM USE EFFECT")
@@ -27,6 +27,7 @@ export default function NavigateCard() {
             renderItem={({item}) => (
               <GooglePlacesAutocomplete
                 placeholder="Pickup location"
+                styles={inputBoxStyle}
                 onPress={(data, details = null) => {
                   console.log(data, details);
 
@@ -43,15 +44,51 @@ export default function NavigateCard() {
                     longitude: details.geometry.location.lng,
                     description: data.description
                   })
+                  
+                }}
+                GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                fetchDetails={true}
+                minLength={2}
+                returnKeyType = {"search"}
+                enablePoweredByContainer={false}
+                query={{
+                  key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
+                  language: 'en',
+                }}
+                nearbyPlaceAPI="GooglePlacesSearch"
+                debounce={400}
+              />
+            )}
+            keyExtractor={item => item.toString()}
+          />
+        </View>
+
+        <View>
+          <FlatList
+            data={[1]}
+            keyboardShouldPersistTaps="always"
+            renderItem={({item}) => (
+              <GooglePlacesAutocomplete
+                placeholder="Pickup location"
+                styles={inputBoxStyle}
+                onPress={(data, details = null) => {
+                  console.log(data, details);
 
                   console.log("I am Latitude")
-                  console.log(location.latitude)
+                  console.log(details.geometry.location.lat)
 
                   console.log("I am Longitude")
-                  console.log(location.longitude)
+                  console.log(details.geometry.location.lng)
 
-                  console.log("Updated location")
-                  console.log(location.description)
+                  console.log(data.description)
+
+                  setDropOffLocation({
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng,
+                    description: data.description
+                  })
+
+                  console.log("Drop Off Location: " + dropOffLocation.latitude)
                   
                 }}
                 GooglePlacesDetailsQuery={{ fields: "geometry" }}
@@ -71,7 +108,6 @@ export default function NavigateCard() {
           />
         </View>
       </View>
-      <Text>Latitude : {location.latitude}</Text>
     </SafeAreaView>
   );
 }
@@ -94,3 +130,21 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
 });
+
+const inputBoxStyle = StyleSheet.create({
+  container: {
+    backgroundColor : 'white',
+    paddingTop : 20,
+    flex : 0
+  },
+  textInput:{
+    backgroundColor : '#DDDDDF',
+    borderRadius : 0,
+    fontSize : 18
+  },
+  textInputContainer:
+  {
+    paddingHorizontal : 20,
+    paddingBottom : 0
+  }
+})

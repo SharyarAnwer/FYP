@@ -9,7 +9,14 @@ const LocationState = props => {
     description: "SZABIST 100 Campus, Block 5 Clifton, Karachi, Pakistan"
   };
 
+  const dropOff = {
+    latitude: 24.8203135,
+    longitude: 67.0310276,
+    description: "SZABIST 100 Campus, Block 5 Clifton, Karachi, Pakistan"
+  }
+
   const [location, setLocation] = useState(state);
+  const [dropOffLocation, setDropOffLocation] = useState(dropOff);
 
   /* const update = () => {
       setLocation({
@@ -21,7 +28,7 @@ const LocationState = props => {
   {/* <LocationContext.Provider value={{state , update}}> */}
 
   return (
-    <LocationContext.Provider value={[location , setLocation]} >
+    <LocationContext.Provider value={[location , setLocation , dropOffLocation, setDropOffLocation]} >
       {props.children}
     </LocationContext.Provider>
   );
