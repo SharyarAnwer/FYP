@@ -410,11 +410,11 @@ const PassengerContact = () => {
             <View style={modalStyles.header}>
               <TouchableOpacity
                 onPress={() => {
-                  setVisible(false);
+                  
 
                   if (code.length < 6)
                   {
-                    console.log(code);
+                    setVisible(false);
                     setCode('');
                     setNumber1('');
                     setNumber2('');
@@ -424,9 +424,14 @@ const PassengerContact = () => {
                     setNumber6('');
                     setOTP(1);
                   }
-                  /* setTimeout(() => {
-                    navigation.navigate('Book A Ride');
-                  }, 1000); */
+                  else
+                  {
+                    setVisible(false);
+                    setTimeout(() => {
+                      navigation.navigate('Book A Ride');
+                    }, 1000);
+                  }
+                  /*  */
                 }}>
                 <Image
                   source={require('../Assets/remove.png')}
@@ -558,15 +563,15 @@ const PassengerContact = () => {
                   console.log('Value of code: ' + code);
                   console.log('Type of code: ' + typeof code);
 
-                  if (code.length < 6) {
+                /*   if (code.length < 6) {
                     setImgSource(require('../Assets/error.png'));
                     setOtpMessage('You have entered an incomplete OTP.');
                     setVisible(true);
                   } 
                   else 
-                  {
+                  { */
                     confirmCode();
-                  }
+                  /* } */
                 }}>
                 <Text style={confirmStyle.textButtonVerify}>Verify</Text>
               </TouchableOpacity>
