@@ -7,6 +7,7 @@ import Map from '../components/Map';
 import LocationState from '../Context/location/LocationState';
 
 export default function Booking() {
+  
   const Stack = createStackNavigator();
   
   return (

@@ -4,15 +4,15 @@ import LocationContext from './LocationContext';
 const LocationState = props => {
 
   const state = {
-    latitude: 24.8203135,
-    longitude: 67.0310276,
-    description: "SZABIST 100 Campus, Block 5 Clifton, Karachi, Pakistan"
+    latitude: 24.8210537,
+    longitude: 67.0341254,
+    description: "Pickup Location"
   };
 
   const dropOff = {
-    latitude: 24.8203135,
-    longitude: 67.0310276,
-    description: "SZABIST 100 Campus, Block 5 Clifton, Karachi, Pakistan"
+    latitude: 24.8338325,
+    longitude: 67.0336822,
+    description: "Dropoff Location"
   }
 
   const [location, setLocation] = useState(state);

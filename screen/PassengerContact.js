@@ -108,8 +108,6 @@ const PassengerContact = () => {
   const image = route.params.image;
   const email = route.params.email;
 
-  //const {code1, setCode1} = useContext(PracticeContext);
-
   const navigation = useNavigation();
 
   const [phoneData, setData] = useState('');
@@ -118,18 +116,10 @@ const PassengerContact = () => {
     setData(data);
   };
 
-  /* useEffect(() => {
-    console.log('I am the real phone number' + phoneData);
-  }, [phoneData]); */
-
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
 
   const [code, setCode] = useState('');
-
-  /* useEffect(() => {
-    setCode(code);
-  }, [code, number1, number2, number3, number4, number5, number6]); */
 
   const getOTP = otp => {
     setCode(otp);
@@ -145,17 +135,6 @@ const PassengerContact = () => {
     console.log('Mobile Number : ' + user.phoneNumber);
     setData(user.phoneNumber);
   }
-
-  /* firestore()
-  .collection('Users')
-  .add({
-    Name: name,
-    Email: email,
-    Mobile_number: phoneData
-  })
-  .then(() => {
-    console.log('User added successfully!');
-  }); */
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -187,11 +166,6 @@ const PassengerContact = () => {
         .then(() => {
           console.log('User added successfully!');
         });
-
-      //firestore()
-      //console.log('I came null');
-      //console.log('I was printed' + confirm.confirm(code.phoneNumber));
-      //console.log('I Am The OTP' + code);
     } catch (error) {
       console.log(code);
       setCode('');
@@ -352,7 +326,6 @@ const PassengerContact = () => {
 
           <View style={{alignItems: 'center'}}>
             <Image
-              //source={require('../Assets/check.png')}
               source={imgSource}
               style={{height: 150, width: 150, marginVertical: 10}}
             />
@@ -370,10 +343,6 @@ const PassengerContact = () => {
                 navigation.goBack();
               }}>
               <Icon name="chevron-left" size={24} style={styles.iconWhite} />
-              {/* <Button
-                title="Phone Number Sign In"
-                onPress={() => signInWithPhoneNumber('+92 3313255712')}
-              /> */}
             </TouchableOpacity>
 
             <View>
@@ -395,14 +364,6 @@ const PassengerContact = () => {
 
           <Dropdown2 onSubmit={getData} />
 
-          {/* <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Your phone number"
-              placeholderTextColor="#ababab"
-            />
-          </View> */}
-
           <View>
             <Text style={styles.description}>
               We will send you an OTP to your phone number
@@ -420,7 +381,6 @@ const PassengerContact = () => {
                   setImgSource(require('../Assets/sim-card.png'));
                   setOtpMessage('You cannot leave the input field empty');
                   setVisible(true);
-                  //Alert.alert('Plz enter your contact number.');
                 } else {
                   if (phoneData.charAt(3) == '0') {
                     var str = phoneData;
@@ -430,10 +390,6 @@ const PassengerContact = () => {
                     signInWithPhoneNumber(phoneData);
                   }
                 }
-
-                /* console.log("Code1",code1) */
-                //navigation.navigate('Verification' , {confirmcode : confirmCode , checkFunc : check});
-                /* console.log(phoneData.charAt(3) == '0') */
               }}>
               <Icon name="arrow-right" size={25} style={styles.iconButton} />
             </TouchableOpacity>
@@ -449,16 +405,28 @@ const PassengerContact = () => {
         <Button title="Confirm Code" onPress={() => confirmCode()} />
         {/* IF SHIT BREAKS DOWN. UNCOMMIT THIS SECTION */}
 
-        {/* <ModalPopup visible={visible} imgSource = {imgSource} otpMessage = {otpMessage}> */}
         <ModalPopup visible={visible}>
           <View style={{alignItems: 'center'}}>
             <View style={modalStyles.header}>
               <TouchableOpacity
                 onPress={() => {
                   setVisible(false);
-                  setTimeout(() => {
+
+                  if (code.length < 6)
+                  {
+                    console.log(code);
+                    setCode('');
+                    setNumber1('');
+                    setNumber2('');
+                    setNumber3('');
+                    setNumber4('');
+                    setNumber5('');
+                    setNumber6('');
+                    setOTP(1);
+                  }
+                  /* setTimeout(() => {
                     navigation.navigate('Book A Ride');
-                  }, 1000);
+                  }, 1000); */
                 }}>
                 <Image
                   source={require('../Assets/remove.png')}
@@ -590,8 +558,15 @@ const PassengerContact = () => {
                   console.log('Value of code: ' + code);
                   console.log('Type of code: ' + typeof code);
 
-                  confirmCode();
-                  //setVisible(true);
+                  if (code.length < 6) {
+                    setImgSource(require('../Assets/error.png'));
+                    setOtpMessage('You have entered an incomplete OTP.');
+                    setVisible(true);
+                  } 
+                  else 
+                  {
+                    confirmCode();
+                  }
                 }}>
                 <Text style={confirmStyle.textButtonVerify}>Verify</Text>
               </TouchableOpacity>
