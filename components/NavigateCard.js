@@ -29,6 +29,7 @@ export default function NavigateCard() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Good Morning, Shahryar!</Text>
+
       <View style={styles.box1}>
         <View>
           <FlatList
@@ -136,7 +137,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    borderTopRightRadius: 40,
+    borderTopLeftRadius: 40
   },
   heading: {
     textAlign: 'center',
@@ -159,7 +162,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    zIndex: -2
   },
   selectRide: {
     color: 'white',

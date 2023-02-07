@@ -15,6 +15,7 @@ import Verification from './screen/Verification';
 import auth from '@react-native-firebase/auth';
 
 import Booking from './screen/Booking';
+import AvailableDrivers from './screen/AvailableDrivers';
 
 export default function App() {
   /*  */
@@ -70,6 +71,12 @@ export default function App() {
             options={{headerShown: false}}
             name="Book A Ride"
             component={Booking}
+          />
+
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Available Drivers"
+            component={AvailableDrivers}
           />
         </Stack.Navigator>
       </NavigationContainer>

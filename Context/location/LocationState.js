@@ -4,14 +4,14 @@ import LocationContext from './LocationContext';
 const LocationState = props => {
 
   const state = {
-    latitude: 24.8210537,
-    longitude: 67.0341254,
+    latitude: 0,
+    longitude: 0,
     description: "Pickup Location"
   };
 
   const dropOff = {
-    latitude: 24.8338325,
-    longitude: 67.0336822,
+    latitude: 0,
+    longitude: 0,
     description: "Dropoff Location"
   }
 

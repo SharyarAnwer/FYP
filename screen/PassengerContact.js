@@ -156,7 +156,7 @@ const PassengerContact = () => {
       setOtpMessage('Congratulations! Your OTP has been verified!');
       setVisible(true);
 
-      firestore()
+      /* firestore()
         .collection('Users')
         .add({
           Name: name,
@@ -165,7 +165,7 @@ const PassengerContact = () => {
         })
         .then(() => {
           console.log('User added successfully!');
-        });
+        }); */
     } catch (error) {
       console.log(code);
       setCode('');

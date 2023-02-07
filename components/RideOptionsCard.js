@@ -58,8 +58,8 @@ export default function RideOptionsCard() {
             onPress={() => setSelected(item)}>
             <Image
               style={{
-                width: 100,
-                height: 100,
+                width: 70,
+                height: 70,
                 resizeMode: 'contain',
               }}
               source={image}
@@ -81,6 +81,9 @@ export default function RideOptionsCard() {
           paddingHorizontal: 20,
         }}>
         <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Available Drivers")
+          }}
           disabled={!selected}
           style={[
             styles.showRiders,
@@ -100,7 +103,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    borderTopRightRadius: 40,
+    borderTopLeftRadius: 40
   },
   header: {
     display: 'flex',
@@ -142,7 +147,8 @@ const styles = StyleSheet.create({
     borderColor: '#7788ef',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 10
+    marginBottom: 10,
+    height: 100
   },
   money: {
     fontSize: 15,
