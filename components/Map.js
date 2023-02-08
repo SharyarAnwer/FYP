@@ -5,8 +5,7 @@ import LocationContext from '../Context/location/LocationContext';
 import MapViewDirections from 'react-native-maps-directions';
 
 export default function Map() {
-  const [location, setLocation, dropOffLocation, setDropOffLocation] =
-    useContext(LocationContext);
+  const [location, setLocation, dropOffLocation, setDropOffLocation] = useContext(LocationContext);
 
   const origin = {latitude: location.latitude, longitude: location.longitude, description: location.description};
 

@@ -1,8 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, {useContext} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+
 import NavigateCard from '../components/NavigateCard';
 import RideOptionsCard from '../components/RideOptionsCard';
+import AvailableDrivers from './AvailableDrivers';
+
 import Map from '../components/Map';
 import LocationState from '../Context/location/LocationState';
 
@@ -11,7 +14,6 @@ export default function Booking() {
   const Stack = createStackNavigator();
   
   return (
-    <LocationState>
       <View style={styles.container}>
         <View style={styles.box1}>
           <Map />
@@ -25,6 +27,7 @@ export default function Booking() {
               headerShown: false,
             }}
           />
+
           <Stack.Screen
             name="RideOptions"
             component={RideOptionsCard}
@@ -32,9 +35,9 @@ export default function Booking() {
               headerShown: false,
             }}
           />
+
         </Stack.Navigator>
       </View>
-    </LocationState>
   );
 }
 

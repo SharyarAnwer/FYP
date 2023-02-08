@@ -18,8 +18,23 @@ export default function NavigateCard() {
   const navigation1 = useNavigation();
   /* const mapLocation = useContext(LocationContext) */
 
-  const [location, setLocation, dropOffLocation, setDropOffLocation] =
-    useContext(LocationContext);
+  const [location, setLocation, dropOffLocation, setDropOffLocation, passengerDetails, setPassengerDetails, ride, setRideType] = useContext(LocationContext);
+
+  const pickupDetails = {
+    latitude: 0,
+    longitude: 0,
+    description: "Pickup Location"
+  }
+  const [pickup, setPickup] = useState(pickupDetails)
+
+  useEffect(() => {
+    setLocation({
+      latitude: pickup.latitude,
+      longitude: pickup.longitude,
+      description: pickup.description,
+    });
+  }, [pickup.latitude, pickup.longitude, pickup.description])
+  
 
   useEffect(() => {
     console.log('I AM FROM USE EFFECT');
@@ -50,11 +65,17 @@ export default function NavigateCard() {
 
                   console.log(data.description);
 
-                  setLocation({
+                  setPickup({
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng,
+                    description: data.description
+                  })
+                  
+                  /* setLocation({
                     latitude: details.geometry.location.lat,
                     longitude: details.geometry.location.lng,
                     description: data.description,
-                  });
+                  }); */
                 }}
                 GooglePlacesDetailsQuery={{fields: 'geometry'}}
                 fetchDetails={true}
@@ -125,7 +146,9 @@ export default function NavigateCard() {
           paddingHorizontal: 20,
           flexShrink: 2
         }}>
-        <TouchableOpacity style={styles.button} onPress = {() => {navigation1.navigate('RideOptions')} } >
+        <TouchableOpacity style={styles.button} onPress = {() => {
+          navigation1.navigate('RideOptions')
+          } } >
           <FontAwesome name="car" color="white" size={18}></FontAwesome>
           <Text style={styles.selectRide}>Select A Ride</Text>
         </TouchableOpacity>

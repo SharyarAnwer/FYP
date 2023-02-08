@@ -97,9 +97,6 @@ export default function RideOptionsCard() {
         }}>
         <TouchableOpacity
           onPress={() => {
-
-            console.log(ride.vehicleType)
-
             navigation.navigate("Available Drivers")
           }}
           disabled={!selected}

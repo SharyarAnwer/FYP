@@ -23,8 +23,8 @@ const LocationState = props => {
 
   /* This will store the pickup location and the coordinates from the user. */
   const state = {
-    latitude: 0,
-    longitude: 0,
+    latitude: null,
+    longitude: null,
     description: "Pickup Location"
   };
   const [location, setLocation] =  useState(state);
@@ -39,7 +39,7 @@ const LocationState = props => {
 
   /* This will store the vehicle which the user has choosen. */
   const vehicle = {
-    vehicleType: null
+    vehicleType: "TRUCK"
   }
   const [ride, setRideType] = useState(vehicle)
 
