@@ -122,7 +122,8 @@ export default function NavigateCard() {
         style={{
           alignItems: 'center',
           marginVertical: 10,
-          paddingHorizontal: 20
+          paddingHorizontal: 20,
+          flexShrink: 2
         }}>
         <TouchableOpacity style={styles.button} onPress = {() => {navigation1.navigate('RideOptions')} } >
           <FontAwesome name="car" color="white" size={18}></FontAwesome>

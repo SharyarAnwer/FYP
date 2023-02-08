@@ -17,6 +17,9 @@ import auth from '@react-native-firebase/auth';
 import Booking from './screen/Booking';
 import AvailableDrivers from './screen/AvailableDrivers';
 
+/* UseContext was imported here so that the useContext details can be used anywhere in the application */
+import LocationState from '../FYP/Context/location/LocationState';
+
 export default function App() {
   /*  */
   const Stack = createNativeStackNavigator();
@@ -26,7 +29,8 @@ export default function App() {
   ]);
 
   return (
-    
+
+    <LocationState>
       <NavigationContainer>
         <Stack.Navigator>
           {/* The above two tags: <NavigationContainer> & <Stack.Navigator> are used to tell the app that following screens will have to be navigated.*/}
@@ -80,5 +84,6 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </LocationState>
   );
 }

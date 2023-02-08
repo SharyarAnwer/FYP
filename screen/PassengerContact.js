@@ -31,6 +31,9 @@ import {transform} from '@babel/core';
 import firestore from '@react-native-firebase/firestore';
 import Loader from './Loader';
 
+//This is used to import and update data from LocationContext.js
+import LocationContext from '../Context/location/LocationContext';
+
 const ModalPopup = ({visible, children}) => {
   const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
@@ -74,6 +77,10 @@ const ModalPopup = ({visible, children}) => {
 };
 
 const PassengerContact = () => {
+  
+  /* This makes a connection between PassengerCOntact.js and LocationState.js.  */
+  const [location, setLocation, dropOffLocation, setDropOffLocation, passengerDetails, setPassengerDetails] = useContext(LocationContext);
+
   /*  */
   const [visible, setVisible] = useState(false);
   const [imgSource, setImgSource] = useState(require('../Assets/check.png'));
@@ -155,6 +162,14 @@ const PassengerContact = () => {
       setImgSource(require('../Assets/check.png'));
       setOtpMessage('Congratulations! Your OTP has been verified!');
       setVisible(true);
+
+      /* The setPassengerDetails saves the name, contactNumber & delivery address in Context.js  */
+      setPassengerDetails({
+        passengerName: name,
+        contactNumber: phoneData,
+        emailAddress: email
+      })
+
 
       /* firestore()
         .collection('Users')
@@ -410,10 +425,7 @@ const PassengerContact = () => {
             <View style={modalStyles.header}>
               <TouchableOpacity
                 onPress={() => {
-                  
-
-                  if (code.length < 6)
-                  {
+                  if (code.length < 6) {
                     setVisible(false);
                     setCode('');
                     setNumber1('');
@@ -423,9 +435,7 @@ const PassengerContact = () => {
                     setNumber5('');
                     setNumber6('');
                     setOTP(1);
-                  }
-                  else
-                  {
+                  } else {
                     setVisible(false);
                     setTimeout(() => {
                       navigation.navigate('Book A Ride');
@@ -562,16 +572,7 @@ const PassengerContact = () => {
                 onPress={() => {
                   console.log('Value of code: ' + code);
                   console.log('Type of code: ' + typeof code);
-
-                /*   if (code.length < 6) {
-                    setImgSource(require('../Assets/error.png'));
-                    setOtpMessage('You have entered an incomplete OTP.');
-                    setVisible(true);
-                  } 
-                  else 
-                  { */
-                    confirmCode();
-                  /* } */
+                  confirmCode();
                 }}>
                 <Text style={confirmStyle.textButtonVerify}>Verify</Text>
               </TouchableOpacity>

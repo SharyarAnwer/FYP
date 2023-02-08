@@ -10,10 +10,17 @@ import {
 import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useState , useContext , useEffect} from 'react';
+
+//This is used to import data from LocationContext.js
+import LocationContext from '../Context/location/LocationContext';
 
 export default function RideOptionsCard() {
+
   const navigation = useNavigation();
+
+  /* This makes a connection between RideOptionCard.js and LocationState.js.  */
+  const [location, setLocation, dropOffLocation, setDropOffLocation, passengerDetails, setPassengerDetails, ride, setRideType] = useContext(LocationContext);
 
   const rideOptions = [
     {
@@ -28,7 +35,15 @@ export default function RideOptionsCard() {
     },
   ];
 
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState('null');
+
+  /* This useEffect sends and save vehicle type to LocationState.js */
+  useEffect(() => {
+    setRideType({
+      vehicleType : selected.title
+    })
+  }, [selected])
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -82,6 +97,9 @@ export default function RideOptionsCard() {
         }}>
         <TouchableOpacity
           onPress={() => {
+
+            console.log(ride.vehicleType)
+
             navigation.navigate("Available Drivers")
           }}
           disabled={!selected}
