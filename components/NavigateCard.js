@@ -5,6 +5,8 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Button,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useContext, useEffect} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -13,19 +15,30 @@ import LocationContext from '../Context/location/LocationContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 
-export default function NavigateCard() {
+/* This library sis used to input date and time from the user. */
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
+export default function NavigateCard() {
   const navigation1 = useNavigation();
   /* const mapLocation = useContext(LocationContext) */
 
-  const [location, setLocation, dropOffLocation, setDropOffLocation, passengerDetails, setPassengerDetails, ride, setRideType] = useContext(LocationContext);
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+  ] = useContext(LocationContext);
 
   const pickupDetails = {
     latitude: 0,
     longitude: 0,
-    description: "Pickup Location"
-  }
-  const [pickup, setPickup] = useState(pickupDetails)
+    description: 'Pickup Location',
+  };
+  const [pickup, setPickup] = useState(pickupDetails);
 
   useEffect(() => {
     setLocation({
@@ -33,17 +46,67 @@ export default function NavigateCard() {
       longitude: pickup.longitude,
       description: pickup.description,
     });
-  }, [pickup.latitude, pickup.longitude, pickup.description])
-  
+  }, [pickup.latitude, pickup.longitude, pickup.description]);
 
   useEffect(() => {
     console.log('I AM FROM USE EFFECT');
     console.log(location.latitude, location.longitude, location.description);
   }, [location.latitude, location.longitude, location.description]);
 
+  /* From here onwards we are setting date and time at which the passenger wants to be picked. */
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState('Please Select Date');
+  const [selectedTime, setSelectedTime] = useState('Please Select Time');
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDateConfirm = date => {
+    const dt = new Date(date);
+    const x = dt.toISOString().split('T');
+    const formattedDate = x[0].split('-');
+    console.log(
+      formattedDate[2] + '/' + formattedDate[1] + '/' + formattedDate[0],
+    );
+    setSelectedDate(
+      formattedDate[2] + '/' + formattedDate[1] + '/' + formattedDate[0],
+    );
+    hideDatePicker();
+  };
+
+  const showTimePicker = () => {
+    setTimePickerVisibility(true);
+  };
+
+  const hideTimePicker = () => {
+    setTimePickerVisibility(false);
+  };
+
+  const handleTimeConfirm = time => {
+    const dt = new Date(time);
+    const x = dt.toLocaleTimeString();
+    const formattedTime = x.split(':');
+    console.log(formattedTime[0] + ':' + formattedTime[1]);
+
+    if (formattedTime[0] > 12) {
+      setSelectedTime(formattedTime[0] - 12 + ':' + formattedTime[1] + ' PM');
+    } else {
+      setSelectedTime(formattedTime[0] + ':' + formattedTime[1] + ' AM');
+    }
+
+    hideTimePicker();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Good Morning, Shahryar!</Text>
+      <Text style={styles.heading}>Good Morning, Shahryar</Text>
 
       <View style={styles.box1}>
         <View>
@@ -68,14 +131,14 @@ export default function NavigateCard() {
                   setPickup({
                     latitude: details.geometry.location.lat,
                     longitude: details.geometry.location.lng,
-                    description: data.description
-                  })
-                  
-                  /* setLocation({
-                    latitude: details.geometry.location.lat,
-                    longitude: details.geometry.location.lng,
                     description: data.description,
-                  }); */
+                  });
+
+                  /* setLocation({
+                      latitude: details.geometry.location.lat,
+                      longitude: details.geometry.location.lng,
+                      description: data.description,
+                    }); */
                 }}
                 GooglePlacesDetailsQuery={{fields: 'geometry'}}
                 fetchDetails={true}
@@ -139,16 +202,51 @@ export default function NavigateCard() {
         </View>
       </View>
 
+      <View style={styles.dateAndTimeButtons}>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => {
+            showDatePicker();
+          }}>
+          <Text>{selectedDate}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.timeButton]}
+          onPress={() => {
+            showTimePicker();
+          }}>
+          <Text>{selectedTime}</Text>
+        </TouchableOpacity>
+
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleDateConfirm}
+          onCancel={hideDatePicker}
+        />
+
+        <DateTimePickerModal
+          isVisible={isTimePickerVisible}
+          mode="time"
+          onConfirm={handleTimeConfirm}
+          onCancel={hideTimePicker}
+        />
+      </View>
+
       <View
         style={{
           alignItems: 'center',
           marginVertical: 10,
           paddingHorizontal: 20,
-          flexShrink: 2
+          flexShrink: 2,
+          marginTop: 'auto',
         }}>
-        <TouchableOpacity style={styles.button} onPress = {() => {
-          navigation1.navigate('RideOptions')
-          } } >
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation1.navigate('RideOptions');
+          }}>
           <FontAwesome name="car" color="white" size={18}></FontAwesome>
           <Text style={styles.selectRide}>Select A Ride</Text>
         </TouchableOpacity>
@@ -161,9 +259,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'space-evenly',
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40
+    /* justifyContent: 'space-evenly' */
+    justifyContent: 'flex-start',
   },
   heading: {
     textAlign: 'center',
@@ -187,7 +284,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    zIndex: -2
+    zIndex: -2,
   },
   selectRide: {
     color: 'white',
@@ -196,7 +293,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    marginLeft: 10
+    marginLeft: 10,
+  },
+  dateAndTimeButtons: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateButton: {
+    width: '90%',
+    height: 50,
+    borderWidth: 0.5,
+    borderRadius: 20,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timeButton: {
+    width: '90%',
+    height: 50,
+    borderWidth: 0.5,
+    borderRadius: 20,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
 
