@@ -106,58 +106,145 @@ export default function NavigateCard() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Good Morning, Shahryar</Text>
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <Text style={styles.heading}>Good Morning, Shahryar</Text>
+          </>
+        }
+        data={[1]}
+        keyboardShouldPersistTaps="always"
+        renderItem={({item}) => (
+          <>
+            <GooglePlacesAutocomplete
+              placeholder="Pickup location"
+              styles={inputBoxStyle}
+              onPress={(data, details = null) => {
+                console.log(data, details);
 
-      <View style={styles.box1}>
-        <View>
-          <FlatList
-            data={[1]}
-            keyboardShouldPersistTaps="always"
-            renderItem={({item}) => (
-              <GooglePlacesAutocomplete
-                placeholder="Pickup location"
-                styles={inputBoxStyle}
-                onPress={(data, details = null) => {
-                  console.log(data, details);
+                console.log('I am Latitude');
+                console.log(details.geometry.location.lat);
 
-                  console.log('I am Latitude');
-                  console.log(details.geometry.location.lat);
+                console.log('I am Longitude');
+                console.log(details.geometry.location.lng);
 
-                  console.log('I am Longitude');
-                  console.log(details.geometry.location.lng);
+                console.log(data.description);
 
-                  console.log(data.description);
+                setPickup({
+                  latitude: details.geometry.location.lat,
+                  longitude: details.geometry.location.lng,
+                  description: data.description,
+                });
 
-                  setPickup({
-                    latitude: details.geometry.location.lat,
-                    longitude: details.geometry.location.lng,
-                    description: data.description,
-                  });
+                /* setLocation({
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+                description: data.description,
+              }); */
+              }}
+              GooglePlacesDetailsQuery={{fields: 'geometry'}}
+              fetchDetails={true}
+              minLength={2}
+              returnKeyType={'search'}
+              enablePoweredByContainer={false}
+              query={{
+                key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
+                language: 'en',
+              }}
+              nearbyPlaceAPI="GooglePlacesSearch"
+              debounce={400}
+            />
 
-                  /* setLocation({
-                      latitude: details.geometry.location.lat,
-                      longitude: details.geometry.location.lng,
-                      description: data.description,
-                    }); */
-                }}
-                GooglePlacesDetailsQuery={{fields: 'geometry'}}
-                fetchDetails={true}
-                minLength={2}
-                returnKeyType={'search'}
-                enablePoweredByContainer={false}
-                query={{
-                  key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
-                  language: 'en',
-                }}
-                nearbyPlaceAPI="GooglePlacesSearch"
-                debounce={400}
+            <GooglePlacesAutocomplete
+              placeholder="Dropoff location"
+              styles={inputBoxStyle}
+              onPress={(data, details = null) => {
+                console.log(data, details);
+
+                console.log('I am Latitude');
+                console.log(details.geometry.location.lat);
+
+                console.log('I am Longitude');
+                console.log(details.geometry.location.lng);
+
+                console.log(data.description);
+
+                setDropOffLocation({
+                  latitude: details.geometry.location.lat,
+                  longitude: details.geometry.location.lng,
+                  description: data.description,
+                });
+
+                console.log('Drop Off Location: ' + dropOffLocation.latitude);
+              }}
+              GooglePlacesDetailsQuery={{fields: 'geometry'}}
+              fetchDetails={true}
+              minLength={2}
+              returnKeyType={'search'}
+              enablePoweredByContainer={false}
+              query={{
+                key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
+                language: 'en',
+              }}
+              nearbyPlaceAPI="GooglePlacesSearch"
+              debounce={400}
+            />
+          </>
+        )}
+        ListFooterComponent={
+          <>
+            <View style={styles.dateAndTimeButtons}>
+              <TouchableOpacity
+                style={styles.dateButton}
+                onPress={() => {
+                  showDatePicker();
+                }}>
+                <Text>{selectedDate}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.timeButton]}
+                onPress={() => {
+                  showTimePicker();
+                }}>
+                <Text>{selectedTime}</Text>
+              </TouchableOpacity>
+
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleDateConfirm}
+                onCancel={hideDatePicker}
               />
-            )}
-            keyExtractor={item => item.toString()}
-          />
-        </View>
 
-        <View>
+              <DateTimePickerModal
+                isVisible={isTimePickerVisible}
+                mode="time"
+                onConfirm={handleTimeConfirm}
+                onCancel={hideTimePicker}
+              />
+            </View>
+
+            <View
+              style={{
+                alignItems: 'center',
+                marginVertical: 10,
+                paddingHorizontal: 20,
+                flexShrink: 2,
+                marginTop: 'auto',
+              }}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  navigation1.navigate('RideOptions');
+                }}>
+                <FontAwesome name="car" color="white" size={18}></FontAwesome>
+                <Text style={styles.selectRide}>Select A Ride</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        }>
+        {/* <View>
           <FlatList
             data={[1]}
             keyboardShouldPersistTaps="always"
@@ -199,58 +286,59 @@ export default function NavigateCard() {
             )}
             keyExtractor={item => item.toString()}
           />
+        </View> */}
+        {/* </View> */}
+
+        {/* <View style={styles.dateAndTimeButtons}>
+          <TouchableOpacity
+            style={styles.dateButton}
+            onPress={() => {
+              showDatePicker();
+            }}>
+            <Text>{selectedDate}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.timeButton]}
+            onPress={() => {
+              showTimePicker();
+            }}>
+            <Text>{selectedTime}</Text>
+          </TouchableOpacity>
+
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleDateConfirm}
+            onCancel={hideDatePicker}
+          />
+
+          <DateTimePickerModal
+            isVisible={isTimePickerVisible}
+            mode="time"
+            onConfirm={handleTimeConfirm}
+            onCancel={hideTimePicker}
+          />
         </View>
-      </View>
 
-      <View style={styles.dateAndTimeButtons}>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={() => {
-            showDatePicker();
+        <View
+          style={{
+            alignItems: 'center',
+            marginVertical: 10,
+            paddingHorizontal: 20,
+            flexShrink: 2,
+            marginTop: 'auto',
           }}>
-          <Text>{selectedDate}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.timeButton]}
-          onPress={() => {
-            showTimePicker();
-          }}>
-          <Text>{selectedTime}</Text>
-        </TouchableOpacity>
-
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleDateConfirm}
-          onCancel={hideDatePicker}
-        />
-
-        <DateTimePickerModal
-          isVisible={isTimePickerVisible}
-          mode="time"
-          onConfirm={handleTimeConfirm}
-          onCancel={hideTimePicker}
-        />
-      </View>
-
-      <View
-        style={{
-          alignItems: 'center',
-          marginVertical: 10,
-          paddingHorizontal: 20,
-          flexShrink: 2,
-          marginTop: 'auto',
-        }}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation1.navigate('RideOptions');
-          }}>
-          <FontAwesome name="car" color="white" size={18}></FontAwesome>
-          <Text style={styles.selectRide}>Select A Ride</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation1.navigate('RideOptions');
+            }}>
+            <FontAwesome name="car" color="white" size={18}></FontAwesome>
+            <Text style={styles.selectRide}>Select A Ride</Text>
+          </TouchableOpacity>
+        </View> */}
+      </FlatList>
     </SafeAreaView>
   );
 }
