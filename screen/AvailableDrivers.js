@@ -15,50 +15,62 @@ import LocationContext from '../Context/location/LocationContext';
 import firestore from '@react-native-firebase/firestore';
 
 export default function AvailableDrivers() {
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+    scheduleTime,
+    setScheduleTime,
+  ] = useContext(LocationContext);
 
-  const [location, setLocation, dropOffLocation, setDropOffLocation, passengerDetails, setPassengerDetails, ride, setRideType] = useContext(LocationContext);
-
-  return(
+  return (
     <>
       <Text>
-        
         Vehicle Type: {ride.vehicleType}
-
         Name: {passengerDetails.passengerName}
         Contact Number: {passengerDetails.contactNumber}
         Email Address: {passengerDetails.emailAddress}
-
         Pickup Location: {location.description}
         Pickup Latitude: {location.latitude}
         Pickup Longitude: {location.longitude}
-
         Dropoff Locatin: {dropOffLocation.description}
         Dropoff Latitude: {dropOffLocation.latitude}
         Dropoff Longitude: {dropOffLocation.longitude}
+        Pickup date: {scheduleTime.date}
+        Pickup time: {scheduleTime.time}
       </Text>
 
-      <Button title='SUBMIT' onPress={() => {
-        firestore()
-        .collection('Passengers')
-        .add({
-          Name: passengerDetails.passengerName,
-          Mobile_number: passengerDetails.contactNumber,
-          Email: passengerDetails.emailAddress,
-          Pickup_Location: location.description,
-          Pickup_Latitude: location.latitude,
-          Pickup_Longitude: location.longitude,
-          Dropoff_Location: dropOffLocation.description,
-          Dropoff_Latitude: dropOffLocation.latitude,
-          Dropoff_Longitude: dropOffLocation.longitude,
-        })
-        .then(() => {
-          console.log('User added successfully!');
-        });
-      }}></Button>
+      <Button
+        title="SUBMIT"
+        onPress={() => {
+          firestore()
+            .collection('Passengers')
+            .add({
+              Name: passengerDetails.passengerName,
+              Mobile_number: passengerDetails.contactNumber,
+              Email: passengerDetails.emailAddress,
+              Pickup_Location: location.description,
+              Pickup_Latitude: location.latitude,
+              Pickup_Longitude: location.longitude,
+              Dropoff_Location: dropOffLocation.description,
+              Dropoff_Latitude: dropOffLocation.latitude,
+              Dropoff_Longitude: dropOffLocation.longitude,
+              Pickup_Date: scheduleTime.date,
+              Pickup_Time: scheduleTime.time 
+            })
+            .then(() => {
+              console.log('User added successfully!');
+            });
+        }}></Button>
     </>
-  )
+  );
 }
-        /* Pickup Location: {location.description}
+/* Pickup Location: {location.description}
         Pickup Latitude: {location.latitude}
         Pickup Longitude: {location.longitude}
 
@@ -66,7 +78,7 @@ export default function AvailableDrivers() {
         Dropoff Latitude: {dropOffLocation.latitude}
         Dropoff Longitude: {dropOffLocation.longitude} */
 
-        /* 
+/* 
           import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';

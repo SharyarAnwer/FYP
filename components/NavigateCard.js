@@ -31,6 +31,8 @@ export default function NavigateCard() {
     setPassengerDetails,
     ride,
     setRideType,
+    scheduleTime,
+    setScheduleTime
   ] = useContext(LocationContext);
 
   const pickupDetails = {
@@ -59,6 +61,15 @@ export default function NavigateCard() {
 
   const [selectedDate, setSelectedDate] = useState('Please Select Date');
   const [selectedTime, setSelectedTime] = useState('Please Select Time');
+  
+  useEffect(() => {
+    setScheduleTime(
+      {
+        date: selectedDate,
+        time: selectedTime
+      }
+    )
+  }, [selectedDate , selectedTime])
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -191,6 +202,7 @@ export default function NavigateCard() {
             />
           </>
         )}
+
         ListFooterComponent={
           <>
             <View style={styles.dateAndTimeButtons}>
@@ -236,6 +248,7 @@ export default function NavigateCard() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
+                  console.log("DATE AND TIME ARE: " + scheduleTime.date + "Time: " + scheduleTime.time)
                   navigation1.navigate('RideOptions');
                 }}>
                 <FontAwesome name="car" color="white" size={18}></FontAwesome>
@@ -244,100 +257,6 @@ export default function NavigateCard() {
             </View>
           </>
         }>
-        {/* <View>
-          <FlatList
-            data={[1]}
-            keyboardShouldPersistTaps="always"
-            renderItem={({item}) => (
-              <GooglePlacesAutocomplete
-                placeholder="Dropoff location"
-                styles={inputBoxStyle}
-                onPress={(data, details = null) => {
-                  console.log(data, details);
-
-                  console.log('I am Latitude');
-                  console.log(details.geometry.location.lat);
-
-                  console.log('I am Longitude');
-                  console.log(details.geometry.location.lng);
-
-                  console.log(data.description);
-
-                  setDropOffLocation({
-                    latitude: details.geometry.location.lat,
-                    longitude: details.geometry.location.lng,
-                    description: data.description,
-                  });
-
-                  console.log('Drop Off Location: ' + dropOffLocation.latitude);
-                }}
-                GooglePlacesDetailsQuery={{fields: 'geometry'}}
-                fetchDetails={true}
-                minLength={2}
-                returnKeyType={'search'}
-                enablePoweredByContainer={false}
-                query={{
-                  key: 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4',
-                  language: 'en',
-                }}
-                nearbyPlaceAPI="GooglePlacesSearch"
-                debounce={400}
-              />
-            )}
-            keyExtractor={item => item.toString()}
-          />
-        </View> */}
-        {/* </View> */}
-
-        {/* <View style={styles.dateAndTimeButtons}>
-          <TouchableOpacity
-            style={styles.dateButton}
-            onPress={() => {
-              showDatePicker();
-            }}>
-            <Text>{selectedDate}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.timeButton]}
-            onPress={() => {
-              showTimePicker();
-            }}>
-            <Text>{selectedTime}</Text>
-          </TouchableOpacity>
-
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            onConfirm={handleDateConfirm}
-            onCancel={hideDatePicker}
-          />
-
-          <DateTimePickerModal
-            isVisible={isTimePickerVisible}
-            mode="time"
-            onConfirm={handleTimeConfirm}
-            onCancel={hideTimePicker}
-          />
-        </View>
-
-        <View
-          style={{
-            alignItems: 'center',
-            marginVertical: 10,
-            paddingHorizontal: 20,
-            flexShrink: 2,
-            marginTop: 'auto',
-          }}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              navigation1.navigate('RideOptions');
-            }}>
-            <FontAwesome name="car" color="white" size={18}></FontAwesome>
-            <Text style={styles.selectRide}>Select A Ride</Text>
-          </TouchableOpacity>
-        </View> */}
       </FlatList>
     </SafeAreaView>
   );
@@ -387,6 +306,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 20,
   },
   dateButton: {
     width: '90%',
@@ -405,7 +325,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
 });
 

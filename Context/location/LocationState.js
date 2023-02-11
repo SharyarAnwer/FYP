@@ -43,8 +43,15 @@ const LocationState = props => {
   }
   const [ride, setRideType] = useState(vehicle)
 
+  /* This will store the pickup date and time of the passenger. */
+  const schedule = {
+    date: null,
+    time: null
+  }
+  const [scheduleTime, setScheduleTime] = useState(schedule)
+
   return (
-    <LocationContext.Provider value={[location , setLocation , dropOffLocation, setDropOffLocation , passengerDetails, setPassengerDetails, ride, setRideType]} >
+    <LocationContext.Provider value={[location , setLocation , dropOffLocation, setDropOffLocation , passengerDetails, setPassengerDetails, ride, setRideType, scheduleTime, setScheduleTime]} >
       {props.children}
     </LocationContext.Provider>
   );
