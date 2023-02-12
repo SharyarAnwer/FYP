@@ -6,6 +6,8 @@ This file will sve the following information about the user:
 4. Pickup Address (Name of place, Latitude, and Longitude)
 5. Dropoff Address (Name of place, Latitude, and Longitude)
 6. Vehicle Type (Bike or car)
+7. Pickup Time
+8. Pickup Date
  */
 import React, {useState} from 'react';
 import LocationContext from './LocationContext';

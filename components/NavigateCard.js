@@ -18,6 +18,9 @@ import {useNavigation} from '@react-navigation/native';
 /* This library sis used to input date and time from the user. */
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
+/* This is used to display a Modal Pop up if the user leaves the address fields empty.*/
+import ModalPopup from './ModalPopup';
+
 export default function NavigateCard() {
   const navigation1 = useNavigation();
   /* const mapLocation = useContext(LocationContext) */
@@ -120,7 +123,7 @@ export default function NavigateCard() {
       <FlatList
         ListHeaderComponent={
           <>
-            <Text style={styles.heading}>Good Morning, Shahryar</Text>
+            <Text style={styles.heading}>Good Morning, {passengerDetails.passengerName}</Text>
           </>
         }
         data={[1]}
@@ -147,11 +150,6 @@ export default function NavigateCard() {
                   description: data.description,
                 });
 
-                /* setLocation({
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
-                description: data.description,
-              }); */
               }}
               GooglePlacesDetailsQuery={{fields: 'geometry'}}
               fetchDetails={true}
@@ -248,8 +246,18 @@ export default function NavigateCard() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  console.log("DATE AND TIME ARE: " + scheduleTime.date + "Time: " + scheduleTime.time)
-                  navigation1.navigate('RideOptions');
+                  if(location.latitude == 0 || location.longitude == 0)
+                  {
+                    alert("Please input a valid pickup location.")
+                  }
+                  else if (dropOffLocation.latitude == 0 || dropOffLocation.longitude == 0)
+                  {
+                    alert("Please input a valid drop off location.")
+                  }
+                  else
+                  {
+                    navigation1.navigate('RideOptions')
+                  }
                 }}>
                 <FontAwesome name="car" color="white" size={18}></FontAwesome>
                 <Text style={styles.selectRide}>Select A Ride</Text>
