@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
+  Image
 } from 'react-native';
 import React, {useState, useContext, useEffect} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -35,7 +36,7 @@ export default function NavigateCard() {
     ride,
     setRideType,
     scheduleTime,
-    setScheduleTime
+    setScheduleTime,
   ] = useContext(LocationContext);
 
   const pickupDetails = {
@@ -64,15 +65,13 @@ export default function NavigateCard() {
 
   const [selectedDate, setSelectedDate] = useState('Please Select Date');
   const [selectedTime, setSelectedTime] = useState('Please Select Time');
-  
+
   useEffect(() => {
-    setScheduleTime(
-      {
-        date: selectedDate,
-        time: selectedTime
-      }
-    )
-  }, [selectedDate , selectedTime])
+    setScheduleTime({
+      date: selectedDate,
+      time: selectedTime,
+    });
+  }, [selectedDate, selectedTime]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -118,12 +117,20 @@ export default function NavigateCard() {
     hideTimePicker();
   };
 
+  /* These 3 lines will be used to display an error msg when user does not enter pickup and dropoff address. */
+  const [visible, setVisible] = useState(false);
+  const [imgSource, setImgSource] = useState(require('../Assets/check.png'));
+  const [otpMessage, setOtpMessage] = useState('');
+
   return (
     <SafeAreaView style={styles.container}>
+      <ModalPopup visible={visible} imageSrc = {imgSource} otpMessage = {otpMessage} setVisible = {setVisible} />
       <FlatList
         ListHeaderComponent={
           <>
-            <Text style={styles.heading}>Good Morning, {passengerDetails.passengerName}</Text>
+            <Text style={styles.heading}>
+              Good Morning, {passengerDetails.passengerName}
+            </Text>
           </>
         }
         data={[1]}
@@ -149,7 +156,6 @@ export default function NavigateCard() {
                   longitude: details.geometry.location.lng,
                   description: data.description,
                 });
-
               }}
               GooglePlacesDetailsQuery={{fields: 'geometry'}}
               fetchDetails={true}
@@ -200,7 +206,6 @@ export default function NavigateCard() {
             />
           </>
         )}
-
         ListFooterComponent={
           <>
             <View style={styles.dateAndTimeButtons}>
@@ -246,17 +251,17 @@ export default function NavigateCard() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if(location.latitude == 0 || location.longitude == 0)
-                  {
-                    alert("Please input a valid pickup location.")
-                  }
-                  else if (dropOffLocation.latitude == 0 || dropOffLocation.longitude == 0)
-                  {
-                    alert("Please input a valid drop off location.")
-                  }
-                  else
-                  {
-                    navigation1.navigate('RideOptions')
+                  if (location.latitude == 0 || location.longitude == 0) {
+                    setVisible(true)
+                    setOtpMessage("Please input a valid pickup location.")
+                    /* alert('Please input a valid pickup location.'); */
+                  } else if (
+                    dropOffLocation.latitude == 0 ||
+                    dropOffLocation.longitude == 0
+                  ) {
+                    alert('Please input a valid drop off location.');
+                  } else {
+                    navigation1.navigate('RideOptions');
                   }
                 }}>
                 <FontAwesome name="car" color="white" size={18}></FontAwesome>
@@ -264,8 +269,7 @@ export default function NavigateCard() {
               </TouchableOpacity>
             </View>
           </>
-        }>
-      </FlatList>
+        }></FlatList>
     </SafeAreaView>
   );
 }
