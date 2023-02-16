@@ -7450,6 +7450,11 @@
   "resolved" "https://registry.npmjs.org/react-native-hr/-/react-native-hr-1.1.4.tgz"
   "version" "1.1.4"
 
+"react-native-image-picker@^5.0.2":
+  "integrity" "sha512-kl5g22TEiOkHcwKFh+BjdBYb+7LTq0yKXZCjgXCPoHbq7QwckgR4mFASPPoX2RUKGFy6cYqJGc0IX+xpqcSX5w=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-5.0.2.tgz"
+  "version" "5.0.2"
+
 "react-native-maps-directions@^1.9.0":
   "integrity" "sha512-68SrMOUg4WQ5PmpS9sNOTZaYtdyVYJnnjQOOhABrgiKnb5BXCZRU2gDoS11gYf23hjUBjq8JXzgfn37WcINLwA=="
   "resolved" "https://registry.npmjs.org/react-native-maps-directions/-/react-native-maps-directions-1.9.0.tgz"

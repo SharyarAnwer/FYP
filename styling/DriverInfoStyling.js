@@ -21,10 +21,6 @@ const PassengerInfoStyling = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     marginVertical: 20
-    /* borderRadius: 5,
-            width: 350,
-            backgroundColor: '#f5f4f2',
-            paddingLeft: 15 */
   },
 });
 

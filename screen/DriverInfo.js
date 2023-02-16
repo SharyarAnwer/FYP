@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet, FlatList, Button, PermissionsAndroid, Image} from 'react-native';
 import DriverInfoStyling from '../styling/DriverInfoStyling';
 import {TextInput} from 'react-native-paper';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { launchCamera } from 'react-native-image-picker';
 
 export default function PassengerInfo() {
   
@@ -60,6 +61,23 @@ export default function PassengerInfo() {
   const [isVehicleCap, setIsVehicleCap] = useState(false);
   const [vehicleCap, setVehicleCap] = useState(seatingCapacity);
 
+  const [cameraPhoto, setCameraPhoto] = useState()
+
+  let cameraOptions = {
+    saveToPhotos : true,
+    mediaType : 'photo'
+  }
+
+  const openCamera = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) 
+    {
+      const result = await launchCamera(cameraOptions)
+      setCameraPhoto(result.assets[0].uri)
+    }
+  }
   return (
     <View style={DriverInfoStyling.main_view}>
       <Text style={DriverInfoStyling.heading}>Switch to driver</Text>
@@ -166,13 +184,15 @@ export default function PassengerInfo() {
 
       </View>
 
+      <Button title='camera' onPress={openCamera}></Button>
+      <Image source={{uri : cameraPhoto}} style = {{height: 100 , width: 100}} ></Image>
     </View>
   );
 }
 
 const dropdown = StyleSheet.create({
   container: {
-    flex: 1,
+    /* flex: 1, */
     width: '100%',
     paddingHorizontal: 20,
     marginVertical: 20,
@@ -213,10 +233,11 @@ const dropdown = StyleSheet.create({
 
 const second_dropdown = StyleSheet.create({
   container: {
-    flex: 1,
+    /* flex: 1, */
     width: '100%',
     paddingHorizontal: 20,
-    marginTop: -180
+    /* marginTop: -180 */
+    marginVertical: 20
   },
   selector: {
     width: '100%',
