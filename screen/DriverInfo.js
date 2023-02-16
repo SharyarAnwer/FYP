@@ -1,13 +1,23 @@
 import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet, FlatList, Button, PermissionsAndroid, Image} from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  Button,
+  PermissionsAndroid,
+  Image,
+} from 'react-native';
 import DriverInfoStyling from '../styling/DriverInfoStyling';
 import {TextInput} from 'react-native-paper';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { launchCamera } from 'react-native-image-picker';
+import Entypo from 'react-native-vector-icons/Entypo';
+
+import {launchCamera} from 'react-native-image-picker';
 
 export default function PassengerInfo() {
-  
   const vehicleType = [
     {
       id: 1,
@@ -19,7 +29,6 @@ export default function PassengerInfo() {
     },
   ];
 
-  
   const options = [
     {
       id: 1,
@@ -37,47 +46,46 @@ export default function PassengerInfo() {
   const [selectVehicle, setSelectVehicle] = useState('Select Vehicle');
   const [isClicked, setIsClicked] = useState(false);
   const [data, setData] = useState(vehicleType);
-  
+
   const seatingCapacity = [
     {
       id: 1,
-      capacity: 1
+      capacity: 1,
     },
     {
       id: 2,
-      capacity: 2
+      capacity: 2,
     },
     {
       id: 3,
-      capacity: 3
+      capacity: 3,
     },
     {
       id: 4,
-      capacity: 4
-    }
-  ]
+      capacity: 4,
+    },
+  ];
 
-  const [capacity, setCapacity] = useState("Select seating capacity")
+  const [capacity, setCapacity] = useState('Select Seating Capacity');
   const [isVehicleCap, setIsVehicleCap] = useState(false);
   const [vehicleCap, setVehicleCap] = useState(seatingCapacity);
 
-  const [cameraPhoto, setCameraPhoto] = useState()
+  const [cameraPhoto, setCameraPhoto] = useState();
 
   let cameraOptions = {
-    saveToPhotos : true,
-    mediaType : 'photo'
-  }
+    saveToPhotos: true,
+    mediaType: 'photo',
+  };
 
   const openCamera = async () => {
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA
+      PermissionsAndroid.PERMISSIONS.CAMERA,
     );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) 
-    {
-      const result = await launchCamera(cameraOptions)
-      setCameraPhoto(result.assets[0].uri)
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      const result = await launchCamera(cameraOptions);
+      setCameraPhoto(result.assets[0].uri);
     }
-  }
+  };
   return (
     <View style={DriverInfoStyling.main_view}>
       <Text style={DriverInfoStyling.heading}>Switch to driver</Text>
@@ -130,30 +138,32 @@ export default function PassengerInfo() {
           )}
         </TouchableOpacity>
 
-        {isClicked ? <View style={dropdown.dropDownArea}>
-          <FlatList
-            data = {data}
-            renderItem = {({item , index}) => {
-              return(
-                <TouchableOpacity style = {dropdown.vehicleType}
-                  onPress = {() => {
-                    setSelectVehicle(item.vehicle)
-                    setIsClicked(false)
-                  }}
-                >
-                  <Text>{item.vehicle}</Text>
-                </TouchableOpacity>
-              )
-            }}
-          />
-        </View> : null}
+        {isClicked ? (
+          <View style={dropdown.dropDownArea}>
+            <FlatList
+              data={data}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    style={dropdown.vehicleType}
+                    onPress={() => {
+                      setSelectVehicle(item.vehicle);
+                      setIsClicked(false);
+                    }}>
+                    <Text>{item.vehicle}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        ) : null}
       </View>
-      
+
       <View style={second_dropdown.container}>
         <TouchableOpacity
           style={second_dropdown.selector}
           onPress={() => {
-            setIsVehicleCap(!isVehicleCap)
+            setIsVehicleCap(!isVehicleCap);
             //setIsClicked(!isClicked);
           }}>
           <Text>{capacity}</Text>
@@ -164,28 +174,54 @@ export default function PassengerInfo() {
           )}
         </TouchableOpacity>
 
-        {isVehicleCap ? <View style={second_dropdown.dropDownArea}>
-          <FlatList
-            data = {vehicleCap}
-            renderItem = {({item , index}) => {
-              return(
-                <TouchableOpacity style = {second_dropdown.vehicleType}
-                  onPress = {() => {
-                    setSelectVehicle(item.capacity)
-                    setIsClicked(false)
-                  }}
-                >
-                  <Text>{item.capacity}</Text>
-                </TouchableOpacity>
-              )
-            }}
-          />
-        </View> : null}
-
+        {isVehicleCap ? (
+          <View style={second_dropdown.dropDownArea}>
+            <FlatList
+              data={vehicleCap}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    style={second_dropdown.vehicleType}
+                    onPress={() => {
+                      setSelectVehicle(item.capacity);
+                      setIsClicked(false);
+                    }}>
+                    <Text>{item.capacity}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        ) : null}
       </View>
 
-      <Button title='camera' onPress={openCamera}></Button>
-      <Image source={{uri : cameraPhoto}} style = {{height: 100 , width: 100}} ></Image>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          marginVertical: 20,
+          width: '100%',
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+        }}>
+        <TouchableOpacity style={DriverInfoStyling.cnicFront}
+          onPress={openCamera}
+        >
+          <Text>CNIC Front</Text>
+          <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={DriverInfoStyling.licenseFront}
+          onPress={openCamera}
+        >
+          <Text>License Front</Text>
+          <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
+        </TouchableOpacity>
+      </View>
+
+      <Image
+        source={{uri: cameraPhoto}}
+        style={{height: 100, width: 100}}></Image>
     </View>
   );
 }
@@ -218,17 +254,16 @@ const dropdown = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 5,
     alignSelf: 'center',
-    zIndex: 20
+    zIndex: 20,
   },
-  vehicleType:
-  {
-    width: "85%",
+  vehicleType: {
+    width: '85%',
     height: 50,
-    borderBottomWidth: .2,
+    borderBottomWidth: 0.2,
     borderBottomColor: '#8e8e8e',
     alignSelf: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 const second_dropdown = StyleSheet.create({
@@ -237,7 +272,7 @@ const second_dropdown = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     /* marginTop: -180 */
-    marginVertical: 20
+    marginVertical: 20,
   },
   selector: {
     width: '100%',
@@ -261,13 +296,12 @@ const second_dropdown = StyleSheet.create({
     elevation: 5,
     alignSelf: 'center',
   },
-  vehicleType:
-  {
-    width: "85%",
+  vehicleType: {
+    width: '85%',
     height: 50,
-    borderBottomWidth: .2,
+    borderBottomWidth: 0.2,
     borderBottomColor: '#8e8e8e',
     alignSelf: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
