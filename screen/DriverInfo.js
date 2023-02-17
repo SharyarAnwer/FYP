@@ -95,7 +95,9 @@ export default function PassengerInfo() {
   };
 
   const uploadImage = async () => {
-    const reference = storage().ref('CNIC_PICTURES/' + imageData.assets[0].fileName);
+    const reference = storage().ref(
+      'CNIC_PICTURES/' + imageData.assets[0].fileName,
+    );
 
     // path to existing file on filesystem
     const pathToFile = cameraPhoto;
@@ -110,7 +112,6 @@ export default function PassengerInfo() {
     <View style={DriverInfoStyling.main_view}>
       <Text style={DriverInfoStyling.heading}>Switch to driver</Text>
       <Text>Please enter the following information</Text>
-
       <View style={DriverInfoStyling.nameInput}>
         <TextInput
           placeholder="Vehicle name"
@@ -121,7 +122,6 @@ export default function PassengerInfo() {
           activeOutlineColor="#7788ef"
         />
       </View>
-
       <View style={DriverInfoStyling.nameInput}>
         <TextInput
           placeholder="Vehicle number"
@@ -132,7 +132,6 @@ export default function PassengerInfo() {
           activeOutlineColor="#7788ef"
         />
       </View>
-
       <View style={DriverInfoStyling.nameInput}>
         <TextInput
           placeholder="Vehicle Model"
@@ -143,7 +142,6 @@ export default function PassengerInfo() {
           activeOutlineColor="#7788ef"
         />
       </View>
-
       <View style={dropdown.container}>
         <TouchableOpacity
           style={dropdown.selector}
@@ -178,7 +176,6 @@ export default function PassengerInfo() {
           </View>
         ) : null}
       </View>
-
       <View style={second_dropdown.container}>
         <TouchableOpacity
           style={second_dropdown.selector}
@@ -214,7 +211,6 @@ export default function PassengerInfo() {
           </View>
         ) : null}
       </View>
-
       <View
         style={{
           display: 'flex',
@@ -233,25 +229,44 @@ export default function PassengerInfo() {
 
         <TouchableOpacity
           style={DriverInfoStyling.licenseFront}
-          /* onPress={openCamera} */
-        >
+          onPress={openCamera}>
           <Text>License Front</Text>
           <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
         </TouchableOpacity>
       </View>
-
-      <View style = {{display: 'flex' , flexDirection: 'row'}}>
-        <View style={{width: 100, height: 20, backgroundColor: 'green'}}>
+      {/* <View style={{width: 100, height: 20, backgroundColor: 'green'}}>
           <Image
             source={{uri: cameraPhoto}}
             style={{height: 100, width: 100}}
           />
-        </View>
+        </View> */}
 
-        <TouchableOpacity onPress={uploadImage} style = {{marginLeft: 40}}>
-          <Text>SUBMIT</Text>
+      <View style={{alignItems: 'center', marginVertical: 20, width: "100%", paddingHorizontal: 20}}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#7788ef',
+            paddingHorizontal: 30,
+            paddingVertical: 20,
+            width: '100%',
+            alignItems: 'center',
+            borderRadius: 10,
+          }}
+          onPress={() => {uploadImage}}>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 18,
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+            }}>
+            Verify
+          </Text>
         </TouchableOpacity>
       </View>
+
+      {/* <TouchableOpacity onPress={uploadImage} style={{marginLeft: 40}}>
+        <Text>SUBMIT</Text>
+      </TouchableOpacity> */}
     </View>
   );
 }
