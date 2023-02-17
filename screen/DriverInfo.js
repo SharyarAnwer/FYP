@@ -5,22 +5,28 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Button,
   PermissionsAndroid,
-  Image,
-  ScrollView,
 } from 'react-native';
+
+/* This imports styling */
 import DriverInfoStyling from '../styling/DriverInfoStyling';
+
+/* All input fields were imported from react-native-paper to improve UI */
 import {TextInput} from 'react-native-paper';
 
+/* Icons used on this page are imported from react native vector icons */
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 
+/* This library allow us to take pictures of CNIC and License. */
 import {launchCamera} from 'react-native-image-picker';
 
+/* This library allows us to store our images to firestore storage. */
 import storage from '@react-native-firebase/storage';
 
 export default function PassengerInfo() {
+
+  /* These are the options for the dropdown for user o select if they hace a bike or a car. */
   const vehicleType = [
     {
       id: 1,
@@ -32,7 +38,7 @@ export default function PassengerInfo() {
     },
   ];
 
-  const options = [
+  /* const options = [
     {
       id: 1,
       name: 'Faculty member',
@@ -41,16 +47,19 @@ export default function PassengerInfo() {
       id: 2,
       name: 'Student',
     },
-  ];
+  ]; */
 
+  /* These 3 saves the name, number, and model of the vehicle */
   const [vehicleName, setVehicleName] = useState(null);
   const [vehicleNumber, setVehicleNumber] = useState(null);
   const [vehicleModel, setVehicleModel] = useState(null);
 
+  /* These 3 come together to save the type of vehicle the driver has i.e car or bike. */
   const [selectVehicle, setSelectVehicle] = useState('Select Vehicle');
   const [isClicked, setIsClicked] = useState(false);
   const [data, setData] = useState(vehicleType);
 
+  /* These are the options for the seating capacity the user has in their vehicle */
   const seatingCapacity = [
     {
       id: 1,
@@ -70,10 +79,12 @@ export default function PassengerInfo() {
     },
   ];
 
+  /* These 3 come together to save the seating capacity of the vehicle. */
   const [capacity, setCapacity] = useState('Select Seating Capacity');
   const [isVehicleCap, setIsVehicleCap] = useState(false);
   const [vehicleCap, setVehicleCap] = useState(seatingCapacity);
 
+  /* These 3 come together to save the front of the CNIC */
   const [cameraPhoto, setCameraPhoto] = useState(null);
   const [imageData, setImageData] = useState(null);
   const [url, setUrl] = useState('');
@@ -111,6 +122,46 @@ export default function PassengerInfo() {
     console.log("URL for CNIC: " + url);
     setUrl(url)
   };
+
+  /*THIS CODE WILL TAKE PICTURE OF LICENSE FRONT, UPLOAD IT TO FIRESTORE STORAGE, AND ALSO FETCH ITS URL*/
+  const [licensePhoto, setLicensePhoto] = useState(null);
+  const [licensePhotoData, setLicensePhotoData] = useState(null);
+  const [licenseUrl, setLicenseUrl] = useState('');
+
+  let licenseCameraOptions = {
+    saveToPhotos: true,
+    mediaType: 'photo',
+  };
+
+  const openLicenseCamera = async () => {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      const result = await launchCamera(licenseCameraOptions);
+      //console.log(result)
+      setLicensePhoto(result.assets[0].uri);
+      setLicensePhotoData(result);
+    }
+  };
+
+  const uploadLicenseImage = async () => {
+    const reference = storage().ref(
+      'License_Front/' + licensePhotoData.assets[0].fileName,
+      //imageData.assets[0].fileName,
+    );
+
+    // path to existing file on filesystem
+    const pathToFile = licensePhoto;
+    // uploads file
+    await reference.putFile(pathToFile);
+    const url = await storage()
+      .ref('License_Front/' + licensePhotoData.assets[0].fileName)
+      .getDownloadURL()
+    console.log("URL for License: " + url);
+    setLicenseUrl(url)
+  };
+
   return (
     <View style={DriverInfoStyling.main_view}>
       <Text style={DriverInfoStyling.heading}>Switch to driver</Text>
@@ -238,7 +289,7 @@ export default function PassengerInfo() {
 
         <TouchableOpacity
           style={DriverInfoStyling.licenseFront}
-          /* onPress={openCamera} */
+          onPress={openLicenseCamera}
         >
           <Text>License Front</Text>
           <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
@@ -263,6 +314,7 @@ export default function PassengerInfo() {
           }}
           onPress={() => {
             uploadImage();
+            uploadLicenseImage()
 
             console.log("Vehicle Name: " + vehicleName)
             console.log("Vehicle Number: " + vehicleNumber)
