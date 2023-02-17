@@ -45,6 +45,7 @@ export default function PassengerInfo() {
 
   const [vehicleName, setVehicleName] = useState(null);
   const [vehicleNumber, setVehicleNumber] = useState(null);
+  const [vehicleModel, setVehicleModel] = useState(null);
 
   const [selectVehicle, setSelectVehicle] = useState('Select Vehicle');
   const [isClicked, setIsClicked] = useState(false);
@@ -97,6 +98,7 @@ export default function PassengerInfo() {
   const uploadImage = async () => {
     const reference = storage().ref(
       'CNIC_PICTURES/' + imageData.assets[0].fileName,
+      //imageData.assets[0].fileName,
     );
 
     // path to existing file on filesystem
@@ -104,44 +106,49 @@ export default function PassengerInfo() {
     // uploads file
     await reference.putFile(pathToFile);
     const url = await storage()
-      .ref(imageData.assets[0].fileName)
-      .getDownloadURL();
-    console.log(url);
+      .ref('CNIC_PICTURES/' + imageData.assets[0].fileName)
+      .getDownloadURL()
+    console.log("URL for CNIC: " + url);
+    setUrl(url)
   };
   return (
     <View style={DriverInfoStyling.main_view}>
       <Text style={DriverInfoStyling.heading}>Switch to driver</Text>
       <Text>Please enter the following information</Text>
+
       <View style={DriverInfoStyling.nameInput}>
         <TextInput
           placeholder="Vehicle name"
           mode="outlined"
           label="Vehicle Name"
           value={vehicleName}
-          onChangeText={name => setVehicleName({name})}
+          onChangeText={name => setVehicleName(name)}
           activeOutlineColor="#7788ef"
         />
       </View>
+
       <View style={DriverInfoStyling.nameInput}>
         <TextInput
           placeholder="Vehicle number"
           mode="outlined"
           label="Vehicle Number"
           value={vehicleNumber}
-          onChangeText={name => vehicleNumber({name})}
+          onChangeText={name => setVehicleNumber(name)}
           activeOutlineColor="#7788ef"
         />
       </View>
+
       <View style={DriverInfoStyling.nameInput}>
         <TextInput
           placeholder="Vehicle Model"
           mode="outlined"
           label="Vehicle Model"
-          value={vehicleNumber}
-          onChangeText={name => vehicleNumber({name})}
+          value={vehicleModel}
+          onChangeText={name => setVehicleModel(name)}
           activeOutlineColor="#7788ef"
         />
       </View>
+
       <View style={dropdown.container}>
         <TouchableOpacity
           style={dropdown.selector}
@@ -176,6 +183,7 @@ export default function PassengerInfo() {
           </View>
         ) : null}
       </View>
+
       <View style={second_dropdown.container}>
         <TouchableOpacity
           style={second_dropdown.selector}
@@ -200,8 +208,8 @@ export default function PassengerInfo() {
                   <TouchableOpacity
                     style={second_dropdown.vehicleType}
                     onPress={() => {
-                      setSelectVehicle(item.capacity);
-                      setIsClicked(false);
+                      setCapacity(item.capacity);
+                      setIsVehicleCap(false);
                     }}>
                     <Text>{item.capacity}</Text>
                   </TouchableOpacity>
@@ -211,6 +219,7 @@ export default function PassengerInfo() {
           </View>
         ) : null}
       </View>
+
       <View
         style={{
           display: 'flex',
@@ -229,19 +238,20 @@ export default function PassengerInfo() {
 
         <TouchableOpacity
           style={DriverInfoStyling.licenseFront}
-          onPress={openCamera}>
+          /* onPress={openCamera} */
+        >
           <Text>License Front</Text>
           <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
         </TouchableOpacity>
       </View>
-      {/* <View style={{width: 100, height: 20, backgroundColor: 'green'}}>
-          <Image
-            source={{uri: cameraPhoto}}
-            style={{height: 100, width: 100}}
-          />
-        </View> */}
 
-      <View style={{alignItems: 'center', marginVertical: 20, width: "100%", paddingHorizontal: 20}}>
+      <View
+        style={{
+          alignItems: 'center',
+          marginVertical: 20,
+          width: '100%',
+          paddingHorizontal: 20,
+        }}>
         <TouchableOpacity
           style={{
             backgroundColor: '#7788ef',
@@ -251,7 +261,15 @@ export default function PassengerInfo() {
             alignItems: 'center',
             borderRadius: 10,
           }}
-          onPress={() => {uploadImage}}>
+          onPress={() => {
+            uploadImage();
+
+            console.log("Vehicle Name: " + vehicleName)
+            console.log("Vehicle Number: " + vehicleNumber)
+            console.log("Vehicle Model: " + vehicleModel)
+            console.log("Vehicle Type: " + selectVehicle)
+            console.log("Vehicle Capacity: " + capacity)
+          }}>
           <Text
             style={{
               color: '#fff',
@@ -263,10 +281,6 @@ export default function PassengerInfo() {
           </Text>
         </TouchableOpacity>
       </View>
-
-      {/* <TouchableOpacity onPress={uploadImage} style={{marginLeft: 40}}>
-        <Text>SUBMIT</Text>
-      </TouchableOpacity> */}
     </View>
   );
 }
