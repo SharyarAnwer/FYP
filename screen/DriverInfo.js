@@ -95,7 +95,7 @@ export default function PassengerInfo() {
   };
 
   const uploadImage = async () => {
-    const reference = storage().ref(imageData.assets[0].fileName);
+    const reference = storage().ref('CNIC_PICTURES/' + imageData.assets[0].fileName);
 
     // path to existing file on filesystem
     const pathToFile = cameraPhoto;
