@@ -32,7 +32,7 @@ const PassengerInfoStyling = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     borderColor: "#4772FF",
-    borderWidth: 1
+    borderWidth: 1.8
   },
   licenseFront: {
     display: 'flex',
@@ -44,7 +44,7 @@ const PassengerInfoStyling = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     borderColor: "#4772FF",
-    borderWidth: 1
+    borderWidth: 1.8
   }
 });
 

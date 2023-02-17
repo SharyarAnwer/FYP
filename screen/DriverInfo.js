@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Button,
   PermissionsAndroid,
   Image,
+  ScrollView,
 } from 'react-native';
 import DriverInfoStyling from '../styling/DriverInfoStyling';
 import {TextInput} from 'react-native-paper';
@@ -16,6 +17,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import {launchCamera} from 'react-native-image-picker';
+
+import storage from '@react-native-firebase/storage';
 
 export default function PassengerInfo() {
   const vehicleType = [
@@ -70,7 +73,9 @@ export default function PassengerInfo() {
   const [isVehicleCap, setIsVehicleCap] = useState(false);
   const [vehicleCap, setVehicleCap] = useState(seatingCapacity);
 
-  const [cameraPhoto, setCameraPhoto] = useState();
+  const [cameraPhoto, setCameraPhoto] = useState(null);
+  const [imageData, setImageData] = useState(null);
+  const [url, setUrl] = useState('');
 
   let cameraOptions = {
     saveToPhotos: true,
@@ -83,8 +88,23 @@ export default function PassengerInfo() {
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       const result = await launchCamera(cameraOptions);
+      //console.log(result)
       setCameraPhoto(result.assets[0].uri);
+      setImageData(result);
     }
+  };
+
+  const uploadImage = async () => {
+    const reference = storage().ref(imageData.assets[0].fileName);
+
+    // path to existing file on filesystem
+    const pathToFile = cameraPhoto;
+    // uploads file
+    await reference.putFile(pathToFile);
+    const url = await storage()
+      .ref(imageData.assets[0].fileName)
+      .getDownloadURL();
+    console.log(url);
   };
   return (
     <View style={DriverInfoStyling.main_view}>
@@ -204,24 +224,34 @@ export default function PassengerInfo() {
           justifyContent: 'space-between',
           paddingHorizontal: 20,
         }}>
-        <TouchableOpacity style={DriverInfoStyling.cnicFront}
-          onPress={openCamera}
-        >
+        <TouchableOpacity
+          style={DriverInfoStyling.cnicFront}
+          onPress={openCamera}>
           <Text>CNIC Front</Text>
           <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
         </TouchableOpacity>
 
-        <TouchableOpacity style={DriverInfoStyling.licenseFront}
-          onPress={openCamera}
+        <TouchableOpacity
+          style={DriverInfoStyling.licenseFront}
+          /* onPress={openCamera} */
         >
           <Text>License Front</Text>
           <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
         </TouchableOpacity>
       </View>
 
-      <Image
-        source={{uri: cameraPhoto}}
-        style={{height: 100, width: 100}}></Image>
+      <View style = {{display: 'flex' , flexDirection: 'row'}}>
+        <View style={{width: 100, height: 20, backgroundColor: 'green'}}>
+          <Image
+            source={{uri: cameraPhoto}}
+            style={{height: 100, width: 100}}
+          />
+        </View>
+
+        <TouchableOpacity onPress={uploadImage} style = {{marginLeft: 40}}>
+          <Text>SUBMIT</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -237,8 +267,8 @@ const dropdown = StyleSheet.create({
     width: '100%',
     height: 50,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#8e8e8e',
+    borderWidth: 1.8,
+    borderColor: '#4772FF',
     alignSelf: 'center',
     marginVertical: 1,
     flexDirection: 'row',
@@ -278,8 +308,8 @@ const second_dropdown = StyleSheet.create({
     width: '100%',
     height: 50,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#8e8e8e',
+    borderWidth: 1.8,
+    borderColor: '#4772FF',
     alignSelf: 'center',
     marginVertical: 1,
     flexDirection: 'row',
@@ -305,3 +335,86 @@ const second_dropdown = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+/* useEffect(() => {
+    const uploadImage = async () => {
+      //First step is to convert image to blob image
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+
+        xhr.onerror = function () {
+          reject(new TypeError('Network request failed'));
+        };
+
+        xhr.responseType = 'blob';
+
+        xhr.open('GET', cameraPhoto, true);
+
+        xhr.send(null);
+      });
+
+      //Second step is to set META, whatever that means
+      // Create the file metadata
+      /** @type {any} */
+/**const metadata = {
+        contentType: 'image/jpeg',
+      };
+
+      //Last step is t send iamge to cloud storage
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      const storageRef = ref(storage, 'CNIC_PICTURES/' + Date.now());
+      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        error => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+
+            // ...
+
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            console.log('File available at', downloadURL);
+          });
+        },
+      );
+    };
+
+    if (cameraPhoto != null) {
+      uploadImage();
+      setCameraPhoto(null);
+    }
+  }, [cameraPhoto]); */

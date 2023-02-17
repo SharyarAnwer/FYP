@@ -2171,7 +2171,7 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.11.tgz"
   "version" "0.1.11"
 
-"@react-native-firebase/app@^16.5.0", "@react-native-firebase/app@16.4.3", "@react-native-firebase/app@16.6.0":
+"@react-native-firebase/app@^16.5.0", "@react-native-firebase/app@16.4.3", "@react-native-firebase/app@16.6.0", "@react-native-firebase/app@17.3.0":
   "integrity" "sha512-Vi8F4+UVS+ybv7w/7m9UjZWWUjMTr/0nChZBv5aVqo84Afld99hN5YT2wdpF4QbDs39l92WLJYUT9LMCqvBKeg=="
   "resolved" "https://registry.npmjs.org/@react-native-firebase/app/-/app-16.5.0.tgz"
   "version" "16.5.0"
@@ -2192,6 +2192,11 @@
   "integrity" "sha512-mSG9zZ5J9RYibaPJ1xgXVs+Zfup/q1DivYjNIVx0qh8VpEacdnYvlKxVK2Qvj3Vd1vp8Ge3ZG+nbcy2/P5jdVA=="
   "resolved" "https://registry.npmjs.org/@react-native-firebase/firestore/-/firestore-16.6.0.tgz"
   "version" "16.6.0"
+
+"@react-native-firebase/storage@^17.3.0":
+  "integrity" "sha512-SsnEirsL4Vi5quvi56iFBA5s3WSNYo2QPkoemR6C/XuF7FAkAD8JXVaVIfHJs2B3DKXn5KSHnbzIgsLWF4o0Xg=="
+  "resolved" "https://registry.npmjs.org/@react-native-firebase/storage/-/storage-17.3.0.tgz"
+  "version" "17.3.0"
 
 "@react-native-google-signin/google-signin@^8.2.1":
   "integrity" "sha512-wtSjKXKxxwntE7A98b4ry6rbTDidxF6taAZISLnJ9WYffFvgyreliKjg3e9IDuTBLCDpDYKUOqK9I/h4hMFnjg=="
