@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Text,
   View,
@@ -24,7 +24,18 @@ import {launchCamera} from 'react-native-image-picker';
 /* This library allows us to store our images to firestore storage. */
 import storage from '@react-native-firebase/storage';
 
+/* This allwos us to save our data to useContext. */
+import DriverContext from '../Context/driver/DriverContext';
+
+import {useNavigation} from '@react-navigation/native';
+
+import Loader from './Loader';
+
 export default function PassengerInfo() {
+
+  const navigation = useNavigation();
+
+  const [driverDetails, setDriverDetails, vehicleInfo, setVehicleInfo, CNIC_url, setCNIC_url, licenseUrl, setLicenseUrl] = useContext(DriverContext);
 
   /* These are the options for the dropdown for user o select if they hace a bike or a car. */
   const vehicleType = [
@@ -120,13 +131,15 @@ export default function PassengerInfo() {
       .ref('CNIC_PICTURES/' + imageData.assets[0].fileName)
       .getDownloadURL()
     console.log("URL for CNIC: " + url);
-    setUrl(url)
+    /* setUrl(url) */
+
+    setCNIC_url(url)
   };
 
   /*THIS CODE WILL TAKE PICTURE OF LICENSE FRONT, UPLOAD IT TO FIRESTORE STORAGE, AND ALSO FETCH ITS URL*/
   const [licensePhoto, setLicensePhoto] = useState(null);
   const [licensePhotoData, setLicensePhotoData] = useState(null);
-  const [licenseUrl, setLicenseUrl] = useState('');
+  //const [licenseUrl, setLicenseUrl] = useState('');
 
   let licenseCameraOptions = {
     saveToPhotos: true,
@@ -159,11 +172,37 @@ export default function PassengerInfo() {
       .ref('License_Front/' + licensePhotoData.assets[0].fileName)
       .getDownloadURL()
     console.log("URL for License: " + url);
+    //setLicenseUrl(url)
+
+    /* setVehicleInfo({
+      licenseUrl: url
+    }) */
+
     setLicenseUrl(url)
   };
 
+  const navigateToNextPage = async () => {
+    setLoaderVisible(true)
+    const uploadImagePromise = uploadImage();
+    const uploadLicenseImagePromise = uploadLicenseImage();
+  
+    await Promise.all([uploadImagePromise, uploadLicenseImagePromise]);
+
+    setVehicleInfo({
+      vehicleName: vehicleName,
+      vehicleNumber: vehicleNumber,
+      vehicleModel: vehicleModel,
+      vehicleType: selectVehicle,
+      seatingCapacity: capacity,
+    })
+  
+    navigation.navigate("Driver Booking");
+  }
+
+  const [loaderVisible, setLoaderVisible] = useState(false);
   return (
     <View style={DriverInfoStyling.main_view}>
+      {loaderVisible && <Loader />}
       <Text style={DriverInfoStyling.heading}>Switch to driver</Text>
       <Text>Please enter the following information</Text>
 
@@ -313,14 +352,25 @@ export default function PassengerInfo() {
             borderRadius: 10,
           }}
           onPress={() => {
-            uploadImage();
-            uploadLicenseImage()
+            navigateToNextPage()
+            /* uploadImage();
+            uploadLicenseImage() */
 
-            console.log("Vehicle Name: " + vehicleName)
-            console.log("Vehicle Number: " + vehicleNumber)
-            console.log("Vehicle Model: " + vehicleModel)
-            console.log("Vehicle Type: " + selectVehicle)
-            console.log("Vehicle Capacity: " + capacity)
+            /* setVehicleInfo({
+              vehicleName: vehicleName,
+              vehicleNumber: vehicleNumber,
+              vehicleModel: vehicleModel,
+              vehicleType: selectVehicle,
+              seatingCapacity: capacity,
+            })
+ */
+            console.log("Vehicle Name: " + vehicleInfo.vehicleName)
+            console.log("Vehicle Number: " + vehicleInfo.vehicleNumber)
+            console.log("Vehicle Model: " + vehicleInfo.vehicleModel)
+            console.log("Vehicle Type: " + vehicleInfo.vehicleType)
+            console.log("Vehicle Capacity: " + vehicleInfo.seatingCapacity)
+
+            /* navigation.navigate("Driver Booking") */
           }}>
           <Text
             style={{
