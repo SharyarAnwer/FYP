@@ -24,6 +24,9 @@ import DriverState from '../FYP/Context/driver/DriverState';
 
 import DriverBooking from '../FYP/screen/DriverBooking'
 
+import DriverContact from './screen/DriverContact';
+
+
 export default function App() {
   /*  */
   const Stack = createNativeStackNavigator();
@@ -91,6 +94,12 @@ export default function App() {
               options={{headerShown: false}}
               name="Driver Booking"
               component={DriverBooking}
+            />
+
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Driver Contact"
+              component={DriverContact}
             />
           </Stack.Navigator>
         </NavigationContainer>

@@ -17,6 +17,9 @@ export default function DriverBooking() {
 
   return (
     <View>
+      <Text>Name: {driverDetails.passengerName}</Text>
+      <Text>Name: {driverDetails.contactNumber}</Text>
+      <Text>Name: {driverDetails.emailAddress}</Text>
       <Text>Vehicle Name: {vehicleInfo.vehicleName}</Text>
       <Text>Vehicle Number: {vehicleInfo.vehicleNumber}</Text>
       <Text>Vehicle Model: {vehicleInfo.vehicleModel}</Text>
