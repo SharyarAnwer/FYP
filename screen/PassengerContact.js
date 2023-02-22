@@ -167,7 +167,8 @@ const PassengerContact = () => {
       setPassengerDetails({
         passengerName: name,
         contactNumber: phoneData,
-        emailAddress: email
+        emailAddress: email,
+        profilePicture: image
       })
 
       /* firestore()

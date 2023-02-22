@@ -18,7 +18,8 @@ const LocationState = props => {
   const personalDetails = {
     passengerName: 'Name',
     contactNumber: 'Phone Number',
-    emailAddress: 'Email Address'
+    emailAddress: 'Email Address',
+    profilePicture: 'Profile Picture'
   }
   const [passengerDetails, setPassengerDetails] = useState(personalDetails);
 

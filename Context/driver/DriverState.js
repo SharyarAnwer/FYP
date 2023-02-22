@@ -19,6 +19,7 @@ const DriverState = props => {
     passengerName: 'Name',
     contactNumber: 'Phone Number',
     emailAddress: 'Email Address',
+    profilePicture: 'Profile Picture'
   };
   const [driverDetails, setDriverDetails] = useState(personalDetails);
 

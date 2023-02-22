@@ -22,6 +22,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 /* This is used to display a Modal Pop up if the user leaves the address fields empty.*/
 import ModalPopup from './ModalPopup';
 
+import firestore from '@react-native-firebase/firestore';
+
 export default function NavigateCard() {
   const navigation1 = useNavigation();
 
@@ -39,7 +41,7 @@ export default function NavigateCard() {
     endingPointLocation,
     setEndingPointLocation,
     scheduleTime,
-    setScheduleTime
+    setScheduleTime,
   ] = useContext(DriverContext);
 
   const startingPointDetails = {
@@ -276,7 +278,10 @@ export default function NavigateCard() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (startingPointLocation.latitude == 0 || startingPointLocation.longitude == 0) {
+                  if (
+                    startingPointLocation.latitude == 0 ||
+                    startingPointLocation.longitude == 0
+                  ) {
                     setVisible(true);
                     setOtpMessage('Please input a valid pickup location.');
                     /* alert('Please input a valid pickup location.'); */
@@ -286,20 +291,65 @@ export default function NavigateCard() {
                   ) {
                     alert('Please input a valid drop off location.');
                   } else {
-                    alert("Name" + driverDetails.passengerName + "\n"
-                    + "Contact Number: " + driverDetails.contactNumber + "\n"
-                    + "Email Address: " + driverDetails.emailAddress + "\n"
-                    + "Vehicle Name: " + vehicleInfo.vehicleName + "\n"
-                    + "Vehicle Number: " + vehicleInfo.vehicleNumber + "\n"
-                    + "Vehicle Model: " + vehicleInfo.vehicleModel + '\n'
-                    + "Vehicle Type: " + vehicleInfo.vehicleType + '\n'
-                    + "Seating Capacity: " + vehicleInfo.seatingCapacity + '\n'
-                    + "CNIC URL: " + CNIC_url + '\n'
-                    + "License URL: " + licenseUrl + '\n'
-                    + "Starting Point: " + startingPointLocation.description + '\n'
-                    + "Ending Point: " + endingPointLocation.description
-                    )
-                  } 
+                    /* alert(
+                      'Name' +
+                        driverDetails.passengerName +
+                        '\n' +
+                        'Contact Number: ' +
+                        driverDetails.contactNumber +
+                        '\n' +
+                        'Email Address: ' +
+                        driverDetails.emailAddress +
+                        '\n' +
+                        'Vehicle Name: ' +
+                        vehicleInfo.vehicleName +
+                        '\n' +
+                        'Vehicle Number: ' +
+                        vehicleInfo.vehicleNumber +
+                        '\n' +
+                        'Vehicle Model: ' +
+                        vehicleInfo.vehicleModel +
+                        '\n' +
+                        'Vehicle Type: ' +
+                        vehicleInfo.vehicleType +
+                        '\n' +
+                        'Seating Capacity: ' +
+                        vehicleInfo.seatingCapacity +
+                        '\n' +
+                        'CNIC URL: ' +
+                        CNIC_url +
+                        '\n' +
+                        'License URL: ' +
+                        licenseUrl +
+                        '\n' +
+                        'Starting Point: ' +
+                        startingPointLocation.description +
+                        '\n' +
+                        'Ending Point: ' +
+                        endingPointLocation.description,
+                    ); */
+
+                    firestore()
+                      .collection('Drivers')
+                      .add({
+                        Name: driverDetails.passengerName,
+                        ContactNumber: driverDetails.contactNumber,
+                        Email: driverDetails.emailAddress,
+                        ProfilePictuer: driverDetails.profilePicture,
+                        VehicleName: vehicleInfo.vehicleName,
+                        VehicleNumber: driverDetails.contactNumber,
+                        VehicleModel: vehicleInfo.vehicleModel,
+                        VehicleType: vehicleInfo.vehicleType,
+                        SeatingCapacity: vehicleInfo.seatingCapacity,
+                        CNICURL: CNIC_url,
+                        LicenseURL: licenseUrl,
+                        StartingPoint: startingPointLocation.description,
+                        EndingPoint: endingPointLocation.description
+                      })
+                      .then(() => {
+                        console.log('User added successfully!');
+                      });
+                  }
                 }}>
                 <FontAwesome name="car" color="white" size={18}></FontAwesome>
                 <Text style={styles.selectRide}>Post A Ride</Text>
