@@ -15,7 +15,6 @@ import React, {useState} from 'react';
 import DriverContext from './DriverContext';
 
 const DriverState = props => {
-
   const personalDetails = {
     passengerName: 'Name',
     contactNumber: 'Phone Number',
@@ -29,19 +28,57 @@ const DriverState = props => {
     vehicleModel: '',
     vehicleType: '',
     seatingCapacity: '',
+  };
+  const [vehicleInfo, setVehicleInfo] = useState(vehicleDetails);
+
+  const [CNIC_url, setCNIC_url] = useState('');
+
+  const [licenseUrl, setLicenseUrl] = useState('');
+
+  const startingPoint = {
+    latitude: null,
+    longitude: null,
+    description: 'Starting Point',
+  };
+  const [startingPointLocation, setStartingPointLocation] =
+    useState(startingPoint);
+
+  /* This will store the dropOff location and the coordinates from the user. */
+  const endingPoint = {
+    latitude: 0,
+    longitude: 0,
+    description: 'Ending Point',
+  };
+  const [endingPointLocation, setEndingPointLocation] = useState(endingPoint);
+
+  /* This will store the pickup date and time of the passenger. */
+  const schedule = {
+    date: null,
+    time: null
   }
-  const [vehicleInfo, setVehicleInfo] = useState(vehicleDetails)
+  const [scheduleTime, setScheduleTime] = useState(schedule)
 
-  const [CNIC_url, setCNIC_url] = useState("")
-  
-  const [licenseUrl, setLicenseUrl] = useState("")
-
-  return(
-
-    <DriverContext.Provider value = {[driverDetails, setDriverDetails, vehicleInfo, setVehicleInfo, CNIC_url, setCNIC_url, licenseUrl, setLicenseUrl]}>
-        {props.children}
+  return (
+    <DriverContext.Provider
+      value={[
+        driverDetails,
+        setDriverDetails,
+        vehicleInfo,
+        setVehicleInfo,
+        CNIC_url,
+        setCNIC_url,
+        licenseUrl,
+        setLicenseUrl,
+        startingPointLocation,
+        setStartingPointLocation,
+        endingPointLocation,
+        setEndingPointLocation,
+        scheduleTime,
+        setScheduleTime
+      ]}>
+      {props.children}
     </DriverContext.Provider>
-  )
+  );
 };
 
 export default DriverState;

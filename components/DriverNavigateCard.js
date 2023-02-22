@@ -9,10 +9,10 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+
 import React, {useState, useContext, useEffect} from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {GOOGLE_MAPS_APIKEY} from '@env';
-import LocationContext from '../Context/location/LocationContext';
+import DriverContext from '../Context/driver/DriverContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 
@@ -24,40 +24,57 @@ import ModalPopup from './ModalPopup';
 
 export default function NavigateCard() {
   const navigation1 = useNavigation();
-  /* const mapLocation = useContext(LocationContext) */
 
   const [
-    location,
-    setLocation,
-    dropOffLocation,
-    setDropOffLocation,
-    passengerDetails,
-    setPassengerDetails,
-    ride,
-    setRideType,
+    driverDetails,
+    setDriverDetails,
+    vehicleInfo,
+    setVehicleInfo,
+    CNIC_url,
+    setCNIC_url,
+    licenseUrl,
+    setLicenseUrl,
+    startingPointLocation,
+    setStartingPointLocation,
+    endingPointLocation,
+    setEndingPointLocation,
     scheduleTime,
-    setScheduleTime,
-  ] = useContext(LocationContext);
+    setScheduleTime
+  ] = useContext(DriverContext);
 
-  const pickupDetails = {
+  const startingPointDetails = {
     latitude: 0,
     longitude: 0,
     description: 'Pickup Location',
   };
-  const [pickup, setPickup] = useState(pickupDetails);
+
+  const [startingPoint, setStartingPoint] = useState(startingPointDetails);
+  //const [pickup, setPickup] = useState(pickupDetails);
 
   useEffect(() => {
-    setLocation({
-      latitude: pickup.latitude,
-      longitude: pickup.longitude,
-      description: pickup.description,
+    setStartingPointLocation({
+      latitude: startingPoint.latitude,
+      longitude: startingPoint.longitude,
+      description: startingPoint.description,
     });
-  }, [pickup.latitude, pickup.longitude, pickup.description]);
+  }, [
+    startingPoint.latitude,
+    startingPoint.longitude,
+    startingPoint.description,
+  ]);
 
   useEffect(() => {
-    console.log('I AM FROM USE EFFECT');
-    console.log(location.latitude, location.longitude, location.description);
-  }, [location.latitude, location.longitude, location.description]);
+    console.log('I AM FROM USE EFFECT FROM DRIVER');
+    console.log(
+      startingPointLocation.latitude,
+      startingPointLocation.longitude,
+      startingPointLocation.description,
+    );
+  }, [
+    startingPointLocation.latitude,
+    startingPointLocation.longitude,
+    startingPointLocation.description,
+  ]);
 
   /* From here onwards we are setting date and time at which the passenger wants to be picked. */
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -130,11 +147,12 @@ export default function NavigateCard() {
         otpMessage={otpMessage}
         setVisible={setVisible}
       />
+
       <FlatList
         ListHeaderComponent={
           <>
             <Text style={styles.heading}>
-              Good Morning, {passengerDetails.passengerName}
+              Good Morning, {driverDetails.passengerName}
             </Text>
           </>
         }
@@ -143,20 +161,20 @@ export default function NavigateCard() {
         renderItem={({item}) => (
           <>
             <GooglePlacesAutocomplete
-              placeholder="Pickup location"
+              placeholder="Starting Point"
               styles={inputBoxStyle}
               onPress={(data, details = null) => {
                 console.log(data, details);
 
-                console.log('I am Latitude');
+                console.log('I am starting point Latitude');
                 console.log(details.geometry.location.lat);
 
-                console.log('I am Longitude');
+                console.log('I am starting point Longitude');
                 console.log(details.geometry.location.lng);
 
                 console.log(data.description);
 
-                setPickup({
+                setStartingPoint({
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                   description: data.description,
@@ -189,13 +207,15 @@ export default function NavigateCard() {
 
                 console.log(data.description);
 
-                setDropOffLocation({
+                setEndingPointLocation({
                   latitude: details.geometry.location.lat,
                   longitude: details.geometry.location.lng,
                   description: data.description,
                 });
 
-                console.log('Drop Off Location: ' + dropOffLocation.latitude);
+                console.log(
+                  'Ending Point Location: ' + endingPointLocation.latitude,
+                );
               }}
               GooglePlacesDetailsQuery={{fields: 'geometry'}}
               fetchDetails={true}
@@ -256,26 +276,37 @@ export default function NavigateCard() {
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                  if (location.latitude == 0 || location.longitude == 0) {
+                  if (startingPointLocation.latitude == 0 || startingPointLocation.longitude == 0) {
                     setVisible(true);
                     setOtpMessage('Please input a valid pickup location.');
                     /* alert('Please input a valid pickup location.'); */
                   } else if (
-                    dropOffLocation.latitude == 0 ||
-                    dropOffLocation.longitude == 0
+                    endingPointLocation.latitude == 0 ||
+                    endingPointLocation.longitude == 0
                   ) {
                     alert('Please input a valid drop off location.');
                   } else {
-                    navigation1.navigate('RideOptions');
-                  }
+                    alert("Name" + driverDetails.passengerName + "\n"
+                    + "Contact Number: " + driverDetails.contactNumber + "\n"
+                    + "Email Address: " + driverDetails.emailAddress + "\n"
+                    + "Vehicle Name: " + vehicleInfo.vehicleName + "\n"
+                    + "Vehicle Number: " + vehicleInfo.vehicleNumber + "\n"
+                    + "Vehicle Model: " + vehicleInfo.vehicleModel + '\n'
+                    + "Vehicle Type: " + vehicleInfo.vehicleType + '\n'
+                    + "Seating Capacity: " + vehicleInfo.seatingCapacity + '\n'
+                    + "CNIC URL: " + CNIC_url + '\n'
+                    + "License URL: " + licenseUrl + '\n'
+                    + "Starting Point: " + startingPointLocation.description + '\n'
+                    + "Ending Point: " + endingPointLocation.description
+                    )
+                  } 
                 }}>
                 <FontAwesome name="car" color="white" size={18}></FontAwesome>
-                <Text style={styles.selectRide}>Select A Ride</Text>
+                <Text style={styles.selectRide}>Post A Ride</Text>
               </TouchableOpacity>
             </View>
           </>
-        }>
-      </FlatList>
+        }></FlatList>
     </SafeAreaView>
   );
 }
@@ -284,6 +315,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    width: '100%',
     /* justifyContent: 'space-evenly' */
     justifyContent: 'flex-start',
   },

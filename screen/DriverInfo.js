@@ -197,6 +197,7 @@ export default function PassengerInfo() {
     })
   
     navigation.navigate("Driver Booking");
+    setLoaderVisible(false)
   }
 
   const [loaderVisible, setLoaderVisible] = useState(false);
