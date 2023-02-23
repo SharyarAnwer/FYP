@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   View,
@@ -8,6 +8,8 @@ import {
   Text,
   Image,
 } from 'react-native';
+
+import firestore from '@react-native-firebase/firestore';
 
 const {width} = Dimensions.get('window');
 
@@ -22,17 +24,34 @@ const DATA = [
   {id: '8', title: 'Card 8', image: require('../Assets/man.png')},
 ];
 
+const collectionRef = firestore().collection('Drivers');
+
+const dataArray = [];
+
+collectionRef
+  /* .where('VehicleType', '==', 'Car') */
+  .get()
+  .then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      const dataObject = {id: doc.id, ...doc.data()};
+      dataArray.push(dataObject);
+    });
+    console.log('I AM RUNNING', dataArray);
+  });
+
 const renderItem = ({item}) => {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => alert(`Pressed on ${item.title}`)}>
+      onPress={() => {
+        alert(`Pressed on ${item.Name}`);
+      }}>
       <View style={styles.partition1}>
-        <Image source={item.image} style={styles.image}></Image>
+        <Image source={{uri : item.ProfilePictuer}} style={styles.image}></Image>
         <View style={{position: 'absolute', left: 75, top: 6}}>
-          <Text>Shahryar</Text>
-          <Text>CD 70</Text>
-          <Text>KAE-154 | 1990</Text>
+          <Text>{item.Name}</Text>
+          <Text>{item.VehicleName}</Text>
+          <Text>{item.VehicleNumber} | 1990</Text>
         </View>
       </View>
 
@@ -66,11 +85,13 @@ const renderItem = ({item}) => {
 };
 
 const FlatListWithCards = () => {
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Available Riders</Text>
       <FlatList
-        data={DATA}
+        /* data={DATA} */
+        data={dataArray}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.contentContainer}
@@ -87,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   heading: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,

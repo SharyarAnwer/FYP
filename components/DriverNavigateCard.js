@@ -337,7 +337,7 @@ export default function NavigateCard() {
                         Email: driverDetails.emailAddress,
                         ProfilePictuer: driverDetails.profilePicture,
                         VehicleName: vehicleInfo.vehicleName,
-                        VehicleNumber: driverDetails.contactNumber,
+                        VehicleNumber: vehicleInfo.vehicleNumber,
                         VehicleModel: vehicleInfo.vehicleModel,
                         VehicleType: vehicleInfo.vehicleType,
                         SeatingCapacity: vehicleInfo.seatingCapacity,

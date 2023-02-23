@@ -42,8 +42,8 @@ export default function Page2() {
       <TouchableOpacity
         style={page2styling.button1}
         onPress={() => {
-          navigation.navigate('Passenger Contact' , {name: route.params.name , email : route.params.email , image : imageUrl})} } >
-          {/* navigation.navigate('Available Drivers') } > */}
+          //navigation.navigate('Passenger Contact' , {name: route.params.name , email : route.params.email , image : imageUrl})} } >
+          navigation.navigate('Available Drivers') }}>
         <View style={page2styling.i_need_a_ride_button}>
           <Text style={page2styling.buttonText1}>I need a ride</Text>
 
