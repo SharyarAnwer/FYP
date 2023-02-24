@@ -23,6 +23,17 @@ const FlatListWithCards = () => {
 
   const [driverDetails, setDriverDetails] = useState(null)
 
+  const [confirmRide, setConfirmRide] = useState(false);
+
+  const updateConfirmRide = (confirm) => {
+    setConfirmRide(confirm);
+  };
+
+  useEffect(() => {
+  console.log("State was update: " + confirmRide)
+  }, [confirmRide])
+  
+
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -110,6 +121,7 @@ const FlatListWithCards = () => {
         isVisible={isModalVisible}
         closeModal={() => setIsModalVisible(false)}
         profile = {driverDetails}
+        updateConfirmRide = {updateConfirmRide}
       />)}
     </View>
   );

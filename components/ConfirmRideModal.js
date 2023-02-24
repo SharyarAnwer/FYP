@@ -1,8 +1,23 @@
 import React, {useState} from 'react';
 import {Modal, View, Text, TouchableOpacity, Image} from 'react-native';
 
-export default function ConfirmRideModal({isVisible, closeModal, profile}) {
-  const [buttonPressed, setButtonPressed] = useState(false);
+export default function ConfirmRideModal({
+  isVisible,
+  closeModal,
+  profile,
+  updateConfirmRide,
+}) {
+  const [confirmRequest, setConfirmRequest] = useState(false);
+
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  const decrement = () => {
+    setCount(count - 1);
+  };
 
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
@@ -17,7 +32,7 @@ export default function ConfirmRideModal({isVisible, closeModal, profile}) {
             backgroundColor: 'white',
             marginHorizontal: 20,
             padding: 20,
-            height: '60%',
+            height: '65%',
             borderRadius: 20,
             elevation: 20,
           }}>
@@ -25,7 +40,8 @@ export default function ConfirmRideModal({isVisible, closeModal, profile}) {
             style={{marginTop: 10}}
             onPress={() => {
               closeModal();
-              setButtonPressed(false)
+              setConfirmRequest(false);
+              updateConfirmRide(false);
             }}>
             {/* <Text>Close Modal</Text> */}
             <Image
@@ -90,14 +106,78 @@ export default function ConfirmRideModal({isVisible, closeModal, profile}) {
               }}>
               Time:
             </Text>
+
             <Text style={{alignSelf: 'flex-start'}}>
               {profile.DepartureTime}
             </Text>
 
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={{alignSelf: 'auto', fontWeight: 'bold', fontSize: 18}}>
+                Select Seats:
+              </Text>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (count == 0) {
+                    } else {
+                      decrement();
+                    }
+                  }}
+                  style={{
+                    backgroundColor: '#7788ef',
+                    alignItems: 'center',
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{fontSize: 24, marginHorizontal: 10, color: '#fff'}}>
+                    -
+                  </Text>
+                </TouchableOpacity>
+                <Text style={{fontSize: 24, marginHorizontal: 10}}>
+                  {count}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (count < profile.SeatingCapacity) {
+                      increment();
+                    }
+                  }}
+                  style={{
+                    backgroundColor: '#7788ef',
+                    alignItems: 'center',
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{fontSize: 24, marginHorizontal: 10, color: '#fff'}}>
+                    +
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
             <TouchableOpacity
+              disabled={count === 0}
+              
               style={{
                 alignSelf: 'center',
-                backgroundColor: '#7788ef',
+                backgroundColor: count === 0 ? 'grey' : '#7788ef',
                 height: 50,
                 width: '95%',
                 alignItems: 'center',
@@ -105,8 +185,11 @@ export default function ConfirmRideModal({isVisible, closeModal, profile}) {
                 marginTop: 15,
                 borderRadius: 10,
               }}
-              onPress={() => setButtonPressed(true)}>
-              {buttonPressed ? (
+              onPress={() => {
+                setConfirmRequest(true);
+                updateConfirmRide(true);
+              }}>
+              {confirmRequest ? (
                 <View
                   style={{
                     flexDirection: 'row',
