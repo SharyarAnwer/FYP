@@ -10,95 +10,81 @@ import {
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
+import ConfirmRideModal from '../components/ConfirmRideModal';
 
 const {width} = Dimensions.get('window');
-
-const DATA = [
-  {id: '1', title: 'Card 1', image: require('../Assets/man.png')},
-  {id: '2', title: 'Card 2', image: require('../Assets/man.png')},
-  {id: '3', title: 'Card 3', image: require('../Assets/man.png')},
-  {id: '4', title: 'Card 4', image: require('../Assets/man.png')},
-  {id: '5', title: 'Card 5', image: require('../Assets/man.png')},
-  {id: '6', title: 'Card 6', image: require('../Assets/man.png')},
-  {id: '7', title: 'Card 7', image: require('../Assets/man.png')},
-  {id: '8', title: 'Card 8', image: require('../Assets/man.png')},
-];
-
-/* const collectionRef = firestore().collection('Drivers'); */
-
-/* const dataArray = []; */
-
-/* collectionRef
-  /* .where('VehicleType', '==', 'Car')
-  .get()
-  .then(querySnapshot => {
-    querySnapshot.forEach(doc => {
-      const dataObject = {id: doc.id, ...doc.data()};
-      dataArray.push(dataObject);
-    });
-    console.log(dataArray);
-  }); */
-
-
-const renderItem = ({item}) => {
-
-  return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => {
-        alert(`Pressed on ${item.Name}`);
-      }}>
-      <View style={styles.partition1}>
-        <Image source={{uri: item.ProfilePictuer}} style={styles.image}></Image>
-        <View style={{position: 'absolute', left: 75, top: 10}}>
-          <Text>{item.Name}</Text>
-          <Text>{item.VehicleName}</Text>
-          <Text>
-            {item.VehicleType} | {item.VehicleNumber} | {item.VehicleModel}
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.partition2}>
-        <View>
-          <Image
-            source={require('../Assets/route1.png')}
-            style={styles.icon}></Image>
-        </View>
-        <View style={styles.addressBox}>
-          <Text>{item.StartingPoint}</Text>
-          <Text>TO</Text>
-          <Text>{item.EndingPoint}</Text>
-
-          <Text style={{fontWeight: 'bold'}}>
-            Time: {item.DepartureDate} At {item.DepartureTime}{' '}
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.partition3}>
-        <View style={styles.seatAvailable}>
-          <Text>{item.SeatingCapacity} Seat Available</Text>
-        </View>
-        <View style={styles.requestButton}>
-          <View style={styles.buttonVerifyWrapper}>
-            <TouchableOpacity style={styles.buttonVerify}>
-              <Text style={styles.textButtonVerify}>Request A Ride</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
 
 const FlatListWithCards = () => {
   const [dataArray, setDataArray] = useState([]);
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [profilePictureModal, setProfilePictureModal] = useState("")
+
+  const [driverDetails, setDriverDetails] = useState(null)
+
+  const renderItem = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.card}
+/*         onPress={() => {
+          alert(`Pressed on ${item.Name}`);
+        }} */ >
+        <View style={styles.partition1}>
+          <Image
+            source={{uri: item.ProfilePictuer}}
+            style={styles.image}></Image>
+          <View style={{position: 'absolute', left: 75, top: 10}}>
+            <Text>{item.Name}</Text>
+            <Text>{item.VehicleName}</Text>
+            <Text>
+              {item.VehicleType} | {item.VehicleNumber} | {item.VehicleModel}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.partition2}>
+          <View>
+            <Image
+              source={require('../Assets/route1.png')}
+              style={styles.icon}></Image>
+          </View>
+          <View style={styles.addressBox}>
+            <Text>{item.StartingPoint}</Text>
+            <Text>TO</Text>
+            <Text>{item.EndingPoint}</Text>
+
+            <Text style={{fontWeight: 'bold'}}>
+              Time: {item.DepartureDate} At {item.DepartureTime}{' '}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.partition3}>
+          <View style={styles.seatAvailable}>
+            <Text>{item.SeatingCapacity} Seat Available</Text>
+          </View>
+          <View style={styles.requestButton}>
+            <View style={styles.buttonVerifyWrapper}>
+              <TouchableOpacity
+                style={styles.buttonVerify}
+                onPress={() => {
+                  setIsModalVisible(true);
+                  setDriverDetails(item)
+                }}>
+                <Text style={styles.textButtonVerify}>Request A Ride</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   useEffect(() => {
     const collectionRef = firestore().collection('Drivers'); // your collection reference here
     collectionRef
-      .where('VehicleType', '==', 'Bike')
+      /* .where('VehicleType', '==', 'Bike') */
       .get()
       .then(querySnapshot => {
         const dataArray = [];
@@ -109,7 +95,7 @@ const FlatListWithCards = () => {
         setDataArray(dataArray);
       });
   }, [dataArray]);
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Available Riders</Text>
@@ -120,6 +106,11 @@ const FlatListWithCards = () => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.contentContainer}
       />
+      {driverDetails && (<ConfirmRideModal
+        isVisible={isModalVisible}
+        closeModal={() => setIsModalVisible(false)}
+        profile = {driverDetails}
+      />)}
     </View>
   );
 };
@@ -182,7 +173,6 @@ const styles = StyleSheet.create({
     top: 14,
     height: 50,
     width: 50,
-    height: 50,
     borderRadius: 25,
   },
   icon: {
@@ -237,6 +227,58 @@ const styles = StyleSheet.create({
 
 export default FlatListWithCards;
 
+
+/* const renderItem = ({item}) => {
+
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => {
+        alert(`Pressed on ${item.Name}`);
+      }}>
+      <View style={styles.partition1}>
+        <Image source={{uri: item.ProfilePictuer}} style={styles.image}></Image>
+        <View style={{position: 'absolute', left: 75, top: 10}}>
+          <Text>{item.Name}</Text>
+          <Text>{item.VehicleName}</Text>
+          <Text>
+            {item.VehicleType} | {item.VehicleNumber} | {item.VehicleModel}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.partition2}>
+        <View>
+          <Image
+            source={require('../Assets/route1.png')}
+            style={styles.icon}></Image>
+        </View>
+        <View style={styles.addressBox}>
+          <Text>{item.StartingPoint}</Text>
+          <Text>TO</Text>
+          <Text>{item.EndingPoint}</Text>
+
+          <Text style={{fontWeight: 'bold'}}>
+            Time: {item.DepartureDate} At {item.DepartureTime}{' '}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.partition3}>
+        <View style={styles.seatAvailable}>
+          <Text>{item.SeatingCapacity} Seat Available</Text>
+        </View>
+        <View style={styles.requestButton}>
+          <View style={styles.buttonVerifyWrapper}>
+            <TouchableOpacity style={styles.buttonVerify}>
+              <Text style={styles.textButtonVerify}>Request A Ride</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}; */
 /* import {
   View,
   Text,
@@ -344,3 +386,18 @@ export default function AvailableDrivers() {
     }}></Button>
 }
  */
+
+/* const collectionRef = firestore().collection('Drivers'); */
+
+/* const dataArray = []; */
+
+/* collectionRef
+  /* .where('VehicleType', '==', 'Car')
+  .get()
+  .then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      const dataObject = {id: doc.id, ...doc.data()};
+      dataArray.push(dataObject);
+    });
+    console.log(dataArray);
+  }); */
