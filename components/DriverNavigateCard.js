@@ -344,7 +344,9 @@ export default function NavigateCard() {
                         CNICURL: CNIC_url,
                         LicenseURL: licenseUrl,
                         StartingPoint: startingPointLocation.description,
-                        EndingPoint: endingPointLocation.description
+                        EndingPoint: endingPointLocation.description,
+                        DepartureDate: scheduleTime.date,
+                        DepartureTime: scheduleTime.time,
                       })
                       .then(() => {
                         console.log('User added successfully!');

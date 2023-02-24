@@ -24,22 +24,24 @@ const DATA = [
   {id: '8', title: 'Card 8', image: require('../Assets/man.png')},
 ];
 
-const collectionRef = firestore().collection('Drivers');
+/* const collectionRef = firestore().collection('Drivers'); */
 
-const dataArray = [];
+/* const dataArray = []; */
 
-collectionRef
-  /* .where('VehicleType', '==', 'Car') */
+/* collectionRef
+  /* .where('VehicleType', '==', 'Car')
   .get()
   .then(querySnapshot => {
     querySnapshot.forEach(doc => {
       const dataObject = {id: doc.id, ...doc.data()};
       dataArray.push(dataObject);
     });
-    console.log('I AM RUNNING', dataArray);
-  });
+    console.log(dataArray);
+  }); */
+
 
 const renderItem = ({item}) => {
+
   return (
     <TouchableOpacity
       style={styles.card}
@@ -47,30 +49,36 @@ const renderItem = ({item}) => {
         alert(`Pressed on ${item.Name}`);
       }}>
       <View style={styles.partition1}>
-        <Image source={{uri : item.ProfilePictuer}} style={styles.image}></Image>
-        <View style={{position: 'absolute', left: 75, top: 6}}>
+        <Image source={{uri: item.ProfilePictuer}} style={styles.image}></Image>
+        <View style={{position: 'absolute', left: 75, top: 10}}>
           <Text>{item.Name}</Text>
           <Text>{item.VehicleName}</Text>
-          <Text>{item.VehicleNumber} | 1990</Text>
+          <Text>
+            {item.VehicleType} | {item.VehicleNumber} | {item.VehicleModel}
+          </Text>
         </View>
       </View>
 
       <View style={styles.partition2}>
         <View>
           <Image
-            source={require('../Assets/route.png')}
+            source={require('../Assets/route1.png')}
             style={styles.icon}></Image>
         </View>
         <View style={styles.addressBox}>
-          <Text>Teen Talwaar, Clifton, Karachi</Text>
-          <Text></Text>
-          <Text>Do Talwaar, Defence, Karachi</Text>
+          <Text>{item.StartingPoint}</Text>
+          <Text>TO</Text>
+          <Text>{item.EndingPoint}</Text>
+
+          <Text style={{fontWeight: 'bold'}}>
+            Time: {item.DepartureDate} At {item.DepartureTime}{' '}
+          </Text>
         </View>
       </View>
 
       <View style={styles.partition3}>
         <View style={styles.seatAvailable}>
-          <Text>1 Seat Available</Text>
+          <Text>{item.SeatingCapacity} Seat Available</Text>
         </View>
         <View style={styles.requestButton}>
           <View style={styles.buttonVerifyWrapper}>
@@ -85,7 +93,23 @@ const renderItem = ({item}) => {
 };
 
 const FlatListWithCards = () => {
- 
+  const [dataArray, setDataArray] = useState([]);
+
+  useEffect(() => {
+    const collectionRef = firestore().collection('Drivers'); // your collection reference here
+    collectionRef
+      .where('VehicleType', '==', 'Bike')
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(doc => {
+          const dataObject = {id: doc.id, ...doc.data()};
+          dataArray.push(dataObject);
+        });
+        setDataArray(dataArray);
+      });
+  }, [dataArray]);
+  
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Available Riders</Text>
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width,
-    height: 200,
+    height: 300,
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 4,
@@ -127,15 +151,18 @@ const styles = StyleSheet.create({
   },
   partition1: {
     width: '100%',
-    height: '33.33%',
+    /* height: '33.33%', */
+    height: '30.33%',
     display: 'flex',
     flexDirection: 'row',
     borderBottomColor: 'grey',
     borderBottomWidth: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   partition2: {
     width: '100%',
-    height: '33.33%',
+    height: '48%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -144,7 +171,7 @@ const styles = StyleSheet.create({
   },
   partition3: {
     width: '100%',
-    height: '33.33%',
+    height: '21.77%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -152,22 +179,24 @@ const styles = StyleSheet.create({
   image: {
     position: 'absolute',
     left: 10,
-    top: 10,
+    top: 14,
     height: 50,
     width: 50,
     height: 50,
     borderRadius: 25,
   },
   icon: {
-    width: 60,
-    height: 60,
-    marginLeft: 10,
+    width: 55,
+    height: 80,
+    /* marginLeft: 5, */
+    marginHorizontal: 5,
+    resizeMode: 'stretch',
   },
   addressBox: {
     alignSelf: 'center',
     flexGrow: 2,
     display: 'flex',
-    marginLeft: 10,
+    maxWidth: '82.5%',
   },
   requestButton: {
     flex: 1,
@@ -183,14 +212,16 @@ const styles = StyleSheet.create({
   },
   buttonVerifyWrapper: {
     alignItems: 'center',
-    marginVertical: 10,
+    /* alignSelf:'center', */
+    /* marginVertical: 0, */
     width: '100%',
     height: '80%',
+    marginTop: 10,
   },
   buttonVerify: {
     backgroundColor: '#7788ef',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     /* width: '100%',
     height: '100%', */
     alignItems: 'center',
@@ -198,7 +229,7 @@ const styles = StyleSheet.create({
   },
   textButtonVerify: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
