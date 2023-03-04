@@ -25,7 +25,8 @@ import ModalPopup from './ModalPopup';
 import firestore from '@react-native-firebase/firestore';
 
 export default function NavigateCard() {
-  const navigation1 = useNavigation();
+
+  const navigation = useNavigation();
 
   const [
     driverDetails,
@@ -140,7 +141,9 @@ export default function NavigateCard() {
   const [visible, setVisible] = useState(false);
   const [imgSource, setImgSource] = useState(require('../Assets/check.png'));
   const [otpMessage, setOtpMessage] = useState('');
-
+  const [buttonVisible, setButtonVisible] = useState(false);
+  const [buttonLink, setButtonLink] = useState('');
+  const [screensToPop, setScreensToPop] = useState(0)
   return (
     <SafeAreaView style={styles.container}>
       <ModalPopup
@@ -148,6 +151,9 @@ export default function NavigateCard() {
         imageSrc={imgSource}
         otpMessage={otpMessage}
         setVisible={setVisible}
+        buttonVisible={buttonVisible}
+        buttonLink={buttonLink}
+        screensToPop={screensToPop}
       />
 
       <FlatList
@@ -284,6 +290,9 @@ export default function NavigateCard() {
                   ) {
                     setVisible(true);
                     setOtpMessage('Please input a valid pickup location.');
+                    setImgSource(require('../Assets/incorrect.png'));
+                    setButtonVisible(false);
+                    setButtonLink(null);
                     /* alert('Please input a valid pickup location.'); */
                   } else if (
                     endingPointLocation.latitude == 0 ||
@@ -291,44 +300,6 @@ export default function NavigateCard() {
                   ) {
                     alert('Please input a valid drop off location.');
                   } else {
-                    /* alert(
-                      'Name' +
-                        driverDetails.passengerName +
-                        '\n' +
-                        'Contact Number: ' +
-                        driverDetails.contactNumber +
-                        '\n' +
-                        'Email Address: ' +
-                        driverDetails.emailAddress +
-                        '\n' +
-                        'Vehicle Name: ' +
-                        vehicleInfo.vehicleName +
-                        '\n' +
-                        'Vehicle Number: ' +
-                        vehicleInfo.vehicleNumber +
-                        '\n' +
-                        'Vehicle Model: ' +
-                        vehicleInfo.vehicleModel +
-                        '\n' +
-                        'Vehicle Type: ' +
-                        vehicleInfo.vehicleType +
-                        '\n' +
-                        'Seating Capacity: ' +
-                        vehicleInfo.seatingCapacity +
-                        '\n' +
-                        'CNIC URL: ' +
-                        CNIC_url +
-                        '\n' +
-                        'License URL: ' +
-                        licenseUrl +
-                        '\n' +
-                        'Starting Point: ' +
-                        startingPointLocation.description +
-                        '\n' +
-                        'Ending Point: ' +
-                        endingPointLocation.description,
-                    ); */
-
                     firestore()
                       .collection('Drivers')
                       .add({
@@ -350,6 +321,14 @@ export default function NavigateCard() {
                       })
                       .then(() => {
                         console.log('User added successfully!');
+                        setImgSource(require('../Assets/check.png'));
+                        setVisible(true);
+                        setOtpMessage(
+                          'Your Ride Has Been Posted Successfully!',
+                        );
+                        setButtonVisible(true);
+                        setButtonLink('Ride Status');
+                        setScreensToPop(3)
                       });
                   }
                 }}>

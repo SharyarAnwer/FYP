@@ -26,6 +26,9 @@ import DriverBooking from '../FYP/screen/DriverBooking'
 
 import DriverContact from './screen/DriverContact';
 
+import RideStatus from './components/RideStatus';
+
+
 
 export default function App() {
   /*  */
@@ -100,6 +103,12 @@ export default function App() {
               options={{headerShown: false}}
               name="Driver Contact"
               component={DriverContact}
+            />
+
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Ride Status"
+              component={RideStatus}
             />
           </Stack.Navigator>
         </NavigationContainer>

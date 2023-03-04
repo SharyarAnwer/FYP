@@ -1,4 +1,4 @@
-import React , {useState , useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Image,
   Button,
@@ -13,12 +13,24 @@ import {
   TouchableNativeFeedback,
   Animated,
   Modal,
-} from 'react-native'
+} from 'react-native';
 
-export default function ModalPopup({visible , children, imageSrc, otpMessage, setVisible }) {
-  
+import {useNavigation} from '@react-navigation/native';
+
+export default function ModalPopup({
+  visible,
+  children,
+  imageSrc,
+  otpMessage,
+  setVisible,
+  buttonVisible,
+  buttonLink,
+  screensToPop
+}) {
   const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     toggleModal();
@@ -54,29 +66,71 @@ export default function ModalPopup({visible , children, imageSrc, otpMessage, se
           ]}>
           {/* {children} */}
           <View style={{alignItems: 'center'}}>
-          <View style={modalStyles.header}>
-            <TouchableOpacity onPress={() => setVisible(false)}>
-              <Image
-                source={require('../Assets/remove.png')}
-                style={{height: 30, width: 30}}></Image>
-            </TouchableOpacity>
+            <View style={modalStyles.header}>
+              <TouchableOpacity onPress={() => setVisible(false)}>
+                <Image
+                  source={require('../Assets/remove.png')}
+                  style={{height: 30, width: 30}}></Image>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <View style={{alignItems: 'center'}}>
-          <Image
-            source={imageSrc}
-            style={{height: 150, width: 150, marginVertical: 10}}
-          />
-        </View>
+          <View style={{alignItems: 'center'}}>
+            <Image
+              source={imageSrc}
+              style={{height: 150, width: 150, marginVertical: 10}}
+            />
+          </View>
 
-        <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
-          {otpMessage}
-        </Text>
+          <Text style={{marginVertical: 30, fontSize: 20, textAlign: 'center'}}>
+            {otpMessage}
+          </Text>
+
+          {buttonVisible && (
+            <View
+              style={{
+                alignItems: 'center',
+                marginVertical: 10,
+                paddingHorizontal: 20,
+                flexShrink: 2,
+                marginTop: 'auto',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.pop(screensToPop);
+                  navigation.navigate(buttonLink);
+                }}
+                style={{
+                  backgroundColor: '#7788ef',
+                  paddingHorizontal: 0,
+                  paddingVertical: 20,
+                  width: '100%',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  zIndex: -2,
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    textAlign: 'center',
+                    color: '#fff',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    marginLeft: 10,
+                  }}>
+                  Check Your Ride Status
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </Animated.View>
       </View>
     </Modal>
-  )
+  );
 }
 
 const modalStyles = StyleSheet.create({

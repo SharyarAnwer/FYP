@@ -1,5 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Modal, View, Text, TouchableOpacity, Image} from 'react-native';
+
+//This is used to import and update data from LocationContext.js
+import LocationContext from '../Context/location/LocationContext';
+
+import firestore from '@react-native-firebase/firestore';
 
 export default function ConfirmRideModal({
   isVisible,
@@ -7,6 +12,20 @@ export default function ConfirmRideModal({
   profile,
   updateConfirmRide,
 }) {
+  /* This makes a connection between PassengerCOntact.js and LocationState.js.  */
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+    scheduleTime,
+    setScheduleTime,
+  ] = useContext(LocationContext);
+
   const [confirmRequest, setConfirmRequest] = useState(false);
 
   const [count, setCount] = useState(0);
@@ -174,7 +193,6 @@ export default function ConfirmRideModal({
 
             <TouchableOpacity
               disabled={count === 0}
-              
               style={{
                 alignSelf: 'center',
                 backgroundColor: count === 0 ? 'grey' : '#7788ef',
@@ -188,6 +206,23 @@ export default function ConfirmRideModal({
               onPress={() => {
                 setConfirmRequest(true);
                 updateConfirmRide(true);
+
+                /* alert(passengerDetails.passengerName + " requested a ride\n" + "Pickup Location: " + location.description + "\n" + "DropOff Location: " + dropOffLocation.description + "\n" + "Requested Seats: " + count) */
+
+                firestore()
+                  .collection('RequestsFromPassenger')
+                  .add({
+                    PassengerName: passengerDetails.passengerName,
+                    PassengerPickupLocation: location.description,
+                    PassengerDropOffLocation: dropOffLocation.description,
+                    PassengerPickupDate: scheduleTime.date,
+                    PassengerPickupTime: scheduleTime.time,
+                    RequestedSeats: count,
+                    DriverName: profile.Name
+                  })
+                  .then(() => {
+                    console.log('User added successfully!');
+                  });
               }}>
               {confirmRequest ? (
                 <View

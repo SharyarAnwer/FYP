@@ -42,8 +42,9 @@ export default function Page2() {
       <TouchableOpacity
         style={page2styling.button1}
         onPress={() => {
-          //navigation.navigate('Passenger Contact' , {name: route.params.name , email : route.params.email , image : imageUrl})} } >
-          navigation.navigate('Available Drivers') }}>
+          navigation.navigate('Passenger Contact' , {name: route.params.name , email : route.params.email , image : imageUrl})} } 
+          /* navigation.navigate('Available Drivers') }} */ >
+
         <View style={page2styling.i_need_a_ride_button}>
           <Text style={page2styling.buttonText1}>I need a ride</Text>
 
@@ -60,7 +61,8 @@ export default function Page2() {
 
       {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
       <TouchableOpacity style={page2styling.button2}
-      onPress={ () => {navigation.navigate('Driver Contact'  , {name: route.params.name , email : route.params.email , image : imageUrl})}}>
+      /* onPress={ () => {navigation.navigate('Driver Booking'  , {name: route.params.name , email : route.params.email , image : imageUrl})}} */ 
+      onPress={ () => {navigation.navigate('Driver Contact'  , {name: route.params.name , email : route.params.email , image : imageUrl})}} >
         <View style={page2styling.i_am_driving_button}>
           <Text style={page2styling.buttonText2}>I am driving</Text>
 
