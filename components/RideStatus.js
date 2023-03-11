@@ -25,6 +25,8 @@ export default function RideStatus() {
 
   const [confirmRide, setConfirmRide] = useState(false);
 
+  const [requestStatus , setRequestStatus] = useState(false)
+
   const updateConfirmRide = confirm => {
     setConfirmRide(confirm);
   };
@@ -111,7 +113,7 @@ export default function RideStatus() {
               // Update the document with new data
               docRef
                 .update({
-                  RequestStatus: "Accepted",
+                  Status: "Accepted",
                   /* key2: value2, */
                 })
                 .then(() => {
@@ -120,6 +122,8 @@ export default function RideStatus() {
                 .catch(error => {
                   console.error('Error updating document: ', error);
                 });
+
+                setRequestStatus(!requestStatus)
             }}
             style={{
               position: 'absolute',
@@ -140,7 +144,7 @@ export default function RideStatus() {
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
               }}>
-              Accept Request
+              {(requestStatus) ? ("Request Accepted") : ("Accept Request")}
             </Text>
           </TouchableOpacity>
         </View>

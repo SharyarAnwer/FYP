@@ -22,9 +22,10 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 /* This is used to display a Modal Pop up if the user leaves the address fields empty.*/
 import ModalPopup from './ModalPopup';
 
+import firestore from '@react-native-firebase/firestore';
+
 export default function NavigateCard() {
   const navigation1 = useNavigation();
-  /* const mapLocation = useContext(LocationContext) */
 
   const [
     location,
@@ -38,6 +39,28 @@ export default function NavigateCard() {
     scheduleTime,
     setScheduleTime,
   ] = useContext(LocationContext);
+
+  const [dataArray, setDataArray] = useState([]);
+
+  useEffect(() => {
+    const collectionRef = firestore().collection('Passengers'); // your collection reference here
+    collectionRef
+      .where('profileStatus', '==', 'Verified')
+      .where('Name' , '==' , passengerDetails.passengerName)
+      .where('SZABISTid' , '==' , passengerDetails.emailAddress.substring(2,9))
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(doc => {
+          const dataObject = {id: doc.id, ...doc.data()};
+          dataArray.push(dataObject);
+        });
+        setDataArray(dataArray);
+        console.log(dataArray[0])
+      });
+  }, []);
+
+  
 
   const pickupDetails = {
     latitude: 0,

@@ -73,7 +73,7 @@ const FlatListWithCards = () => {
 
         <View style={styles.partition3}>
           <View style={styles.seatAvailable}>
-            <Text>{item.SeatingCapacity} Seat Available</Text>
+            <Text>{item.Capacity} Seat Available</Text>
           </View>
           <View style={styles.requestButton}>
             <View style={styles.buttonVerifyWrapper}>
@@ -93,7 +93,7 @@ const FlatListWithCards = () => {
   };
 
   useEffect(() => {
-    const collectionRef = firestore().collection('Drivers'); // your collection reference here
+    const collectionRef = firestore().collection('RidesPostedByDriver'); // your collection reference here
     collectionRef
       /* .where('VehicleType', '==', 'Bike') */
       .get()

@@ -25,6 +25,9 @@ import ModalPopup from './ModalPopup';
 
 import firestore from '@react-native-firebase/firestore';
 
+/* Icons used on this page are imported from react native vector icons */
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 export default function NavigateCard(props) {
   const navigation = useNavigation();
 
@@ -153,8 +156,8 @@ export default function NavigateCard(props) {
     const collectionRef = firestore().collection('Drivers'); // your collection reference here
     collectionRef
       .where('profileStatus', '==', 'Verified')
-      .where('Name' , '==' , props.name)
-      .where('SZABISTid' , '==' , props.email.substring(2,9))
+      .where('Name', '==', props.name)
+      .where('SZABISTid', '==', props.email.substring(2, 9))
       .get()
       .then(querySnapshot => {
         const dataArray = [];
@@ -163,10 +166,52 @@ export default function NavigateCard(props) {
           dataArray.push(dataObject);
         });
         setDataArray(dataArray);
-        console.log(dataArray[0])
+        console.log(dataArray[0]);
       });
   }, []);
 
+
+  /* These are the options for the dropdown for user o select if they hace a bike or a car. */
+  const vehicleType = [
+    {
+      id: 1,
+      vehicle: 'Bike',
+    },
+    {
+      id: 2,
+      vehicle: 'Car',
+    },
+  ];
+
+  /* These 3 come together to save the type of vehicle the driver has i.e car or bike. */
+  const [selectVehicle, setSelectVehicle] = useState('Select Vehicle');
+  const [isClicked, setIsClicked] = useState(false);
+  const [data, setData] = useState(vehicleType);
+
+  /* These are the options for the seating capacity the user has in their vehicle */
+  const seatingCapacity = [
+    {
+      id: 1,
+      capacity: 1,
+    },
+    {
+      id: 2,
+      capacity: 2,
+    },
+    {
+      id: 3,
+      capacity: 3,
+    },
+    {
+      id: 4,
+      capacity: 4,
+    },
+  ];
+
+  /* These 3 come together to save the seating capacity of the vehicle. */
+  const [capacity, setCapacity] = useState('Select Seating Capacity');
+  const [isVehicleCap, setIsVehicleCap] = useState(false);
+  const [vehicleCap, setVehicleCap] = useState(seatingCapacity);
   return (
     <SafeAreaView style={styles.container}>
       <ModalPopup
@@ -316,6 +361,52 @@ export default function NavigateCard(props) {
               />
             </View>
 
+            {/*  */}
+
+            <View style={second_dropdown.container}>
+              <TouchableOpacity
+                style={second_dropdown.selector}
+                onPress={() => {
+                  setIsVehicleCap(!isVehicleCap);
+                  //setIsClicked(!isClicked);
+                }}>
+                <Text>{capacity}</Text>
+                {isVehicleCap ? (
+                  <AntDesign
+                    name="caretup"
+                    color={'#4772FF'}
+                    size={10}></AntDesign>
+                ) : (
+                  <AntDesign
+                    name="caretdown"
+                    color={'#4772FF'}
+                    size={10}></AntDesign>
+                )}
+              </TouchableOpacity>
+
+              {isVehicleCap ? (
+                <View style={second_dropdown.dropDownArea}>
+                  <FlatList
+                    data={vehicleCap}
+                    renderItem={({item, index}) => {
+                      return (
+                        <TouchableOpacity
+                          style={second_dropdown.vehicleType}
+                          onPress={() => {
+                            setCapacity(item.capacity);
+                            setIsVehicleCap(false);
+                          }}>
+                          <Text>{item.capacity}</Text>
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </View>
+              ) : null}
+            </View>
+
+            {/*  */}
+
             <View
               style={{
                 alignItems: 'center',
@@ -357,11 +448,18 @@ export default function NavigateCard(props) {
 
                         ProfilePictuer: dataArray[0].ProfilePicture,
                         /* ProfilePictuer: driverDetails.profilePicture, */
-                        
-                        VehicleName: vehicleInfo.vehicleName,
-                        VehicleNumber: vehicleInfo.vehicleNumber,
-                        VehicleModel: vehicleInfo.vehicleModel,
-                        VehicleType: vehicleInfo.vehicleType,
+
+                        VehicleName: dataArray[0].VehicleName,
+                        /* VehicleName: vehicleInfo.vehicleName, */
+
+                        VehicleNumber: dataArray[0].VehicleNumber,
+                        /* VehicleNumber: vehicleInfo.vehicleNumber, */
+
+                        VehicleModel: dataArray[0].VehicleModel,
+                        /* VehicleModel: vehicleInfo.vehicleModel, */
+
+                        VehicleType: dataArray[0].VehicleType,
+                        /* VehicleType: vehicleInfo.vehicleType, */
                         /* SeatingCapacity: vehicleInfo.seatingCapacity,
                         CNICURL: CNIC_url,
                         LicenseURL: licenseUrl, */
@@ -369,6 +467,7 @@ export default function NavigateCard(props) {
                         EndingPoint: endingPointLocation.description,
                         DepartureDate: scheduleTime.date,
                         DepartureTime: scheduleTime.time,
+                        Capacity : capacity
                       })
                       .then(() => {
                         console.log('User added successfully!');
@@ -379,7 +478,7 @@ export default function NavigateCard(props) {
                         );
                         setButtonVisible(true);
                         setButtonLink('Ride Status');
-                        setScreensToPop(3);
+                        setScreensToPop(1);
                       });
                   }
                 }}>
@@ -475,5 +574,46 @@ const inputBoxStyle = StyleSheet.create({
   textInputContainer: {
     paddingHorizontal: 20,
     paddingBottom: 0,
+  },
+});
+
+
+const second_dropdown = StyleSheet.create({
+  container: {
+    /* flex: 1, */
+    width: '100%',
+    paddingHorizontal: 20,
+    /* marginTop: -180 */
+    marginVertical: 20,
+  },
+  selector: {
+    width: '100%',
+    height: 50,
+    borderRadius: 5,
+    borderWidth: 1.8,
+    borderColor: '#4772FF',
+    alignSelf: 'center',
+    marginVertical: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  dropDownArea: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginTop: 0,
+    backgroundColor: '#fff',
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  vehicleType: {
+    width: '85%',
+    height: 50,
+    borderBottomWidth: 0.2,
+    borderBottomColor: '#8e8e8e',
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
 });

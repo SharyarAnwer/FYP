@@ -69,6 +69,8 @@ export default function Page2() {
 
   const route = useRoute();
 
+  const name = route.params.name;
+  const email = route.params.email;
   const imageUrl = route.params.imageURL;
 
   const [option, setOption] = useState(false);
@@ -125,6 +127,8 @@ export default function Page2() {
             passengerArray[0].profileStatus === 'Verified' &&
             passengerArray[0].Email === route.params.email */
           ) {
+
+            setPassengerDetails({passengerName: name , emailAddress: email, profilePicture : imageUrl})
             navigation.navigate('Book A Ride', {
               name: route.params.name,
               email: route.params.email,

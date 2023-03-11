@@ -169,7 +169,7 @@ export default function ConfirmRideModal({
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    if (count < profile.SeatingCapacity) {
+                    if (count < profile.Capacity) {
                       increment();
                     }
                   }}
@@ -218,7 +218,8 @@ export default function ConfirmRideModal({
                     PassengerPickupDate: scheduleTime.date,
                     PassengerPickupTime: scheduleTime.time,
                     RequestedSeats: count,
-                    DriverName: profile.Name
+                    DriverName: profile.Name,
+                    Status : 'Pending'
                   })
                   .then(() => {
                     console.log('User added successfully!');
