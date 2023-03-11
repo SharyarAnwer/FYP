@@ -8,6 +8,7 @@ import {
   Button,
   ScrollView,
   Image,
+  TextInput,
 } from 'react-native';
 
 import React, {useState, useContext, useEffect} from 'react';
@@ -24,8 +25,7 @@ import ModalPopup from './ModalPopup';
 
 import firestore from '@react-native-firebase/firestore';
 
-export default function NavigateCard() {
-
+export default function NavigateCard(props) {
   const navigation = useNavigation();
 
   const [
@@ -143,7 +143,30 @@ export default function NavigateCard() {
   const [otpMessage, setOtpMessage] = useState('');
   const [buttonVisible, setButtonVisible] = useState(false);
   const [buttonLink, setButtonLink] = useState('');
-  const [screensToPop, setScreensToPop] = useState(0)
+  const [screensToPop, setScreensToPop] = useState(0);
+
+  /* const [vehicleName, setVehicleName] = useState(null); */
+
+  const [dataArray, setDataArray] = useState([]);
+
+  useEffect(() => {
+    const collectionRef = firestore().collection('Drivers'); // your collection reference here
+    collectionRef
+      .where('profileStatus', '==', 'Verified')
+      .where('Name' , '==' , props.name)
+      .where('SZABISTid' , '==' , props.email.substring(2,9))
+      .get()
+      .then(querySnapshot => {
+        const dataArray = [];
+        querySnapshot.forEach(doc => {
+          const dataObject = {id: doc.id, ...doc.data()};
+          dataArray.push(dataObject);
+        });
+        setDataArray(dataArray);
+        console.log(dataArray[0])
+      });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ModalPopup
@@ -160,7 +183,8 @@ export default function NavigateCard() {
         ListHeaderComponent={
           <>
             <Text style={styles.heading}>
-              Good Morning, {driverDetails.driverName}
+              {/* Good Morning, {driverDetails.driverName} */}
+              Good Morning, {props.name}
             </Text>
           </>
         }
@@ -168,6 +192,25 @@ export default function NavigateCard() {
         keyboardShouldPersistTaps="always"
         renderItem={({item}) => (
           <>
+            {/* <TextInput
+              style={{
+                width: '90%',
+                backgroundColor: '#DDDDDF',
+                marginHorizontal: '5%',
+                fontSize: 18,
+                paddingHorizontal: 10,
+                marginBottom: 5,
+              }}
+              placeholder="Vehicle name"
+              mode="outlined"
+              label="Vehicle Name"
+              value={vehicleName}
+              onChangeText={name => {
+                setVehicleInfo({...vehicleInfo , vehicleName : name})
+              }}
+              activeOutlineColor="#7788ef"
+            /> */}
+
             <GooglePlacesAutocomplete
               placeholder="Starting Point"
               styles={inputBoxStyle}
@@ -301,19 +344,27 @@ export default function NavigateCard() {
                     alert('Please input a valid drop off location.');
                   } else {
                     firestore()
-                      .collection('Drivers')
+                      .collection('RidesPostedByDriver')
                       .add({
-                        Name: driverDetails.passengerName,
-                        ContactNumber: driverDetails.contactNumber,
-                        Email: driverDetails.emailAddress,
-                        ProfilePictuer: driverDetails.profilePicture,
+                        Name: dataArray[0].Name,
+                        /* Name: driverDetails.driverName, */
+
+                        ContactNumber: dataArray[0].MobileNumber,
+                        /* ContactNumber: driverDetails.contactNumber, */
+
+                        Email: dataArray[0].Email,
+                        /* Email: driverDetails.emailAddress, */
+
+                        ProfilePictuer: dataArray[0].ProfilePicture,
+                        /* ProfilePictuer: driverDetails.profilePicture, */
+                        
                         VehicleName: vehicleInfo.vehicleName,
                         VehicleNumber: vehicleInfo.vehicleNumber,
                         VehicleModel: vehicleInfo.vehicleModel,
                         VehicleType: vehicleInfo.vehicleType,
-                        SeatingCapacity: vehicleInfo.seatingCapacity,
+                        /* SeatingCapacity: vehicleInfo.seatingCapacity,
                         CNICURL: CNIC_url,
-                        LicenseURL: licenseUrl,
+                        LicenseURL: licenseUrl, */
                         StartingPoint: startingPointLocation.description,
                         EndingPoint: endingPointLocation.description,
                         DepartureDate: scheduleTime.date,
@@ -328,7 +379,7 @@ export default function NavigateCard() {
                         );
                         setButtonVisible(true);
                         setButtonLink('Ride Status');
-                        setScreensToPop(3)
+                        setScreensToPop(3);
                       });
                   }
                 }}>

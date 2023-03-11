@@ -131,8 +131,6 @@ const PassengerContact = () => {
     setCode(otp);
   };
 
-  let firebaseCounter = 0;
-
   // Handle user state changes
   function onAuthStateChanged(user) {
     //console.log(user, 'user');
@@ -162,6 +160,7 @@ const PassengerContact = () => {
       setOtpMessage('Congratulations! Your OTP has been verified!');
       setVisible(true);
 
+      console.log("I AM THE NAME" + name)
       /* The setDriverDetails saves the name, contactNumber & delivery address in DriverState.js  */
       setDriverDetails({
         driverName: name,
@@ -429,7 +428,11 @@ const PassengerContact = () => {
                   } else {
                     setVisible(false);
                     setTimeout(() => {
-                      navigation.navigate('Driver Info');
+                      navigation.navigate('Driver Info', {
+                        name: name,
+                        email: email,
+                        image: image,
+                      });
                     }, 1000);
                   }
                   /*  */

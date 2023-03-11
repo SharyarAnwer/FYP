@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React, {useContext , useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import DriverContext from '../Context/driver/DriverContext';
 
@@ -11,24 +11,38 @@ import DriverNavigateCard from '../components/DriverNavigateCard';
 import DriverMap from '../components/DriverMap';
 //import LocationState from '../Context/location/LocationState';
 
+import {useRoute} from '@react-navigation/native';
 
 export default function DriverBooking() {
-  const [driverDetails, setDriverDetails, vehicleInfo, setVehicleInfo, CNIC_url, setCNIC_url, licenseUrl, setLicenseUrl] =
-    useContext(DriverContext);
+  const [
+    driverDetails,
+    setDriverDetails,
+    vehicleInfo,
+    setVehicleInfo,
+    CNIC_url,
+    setCNIC_url,
+    licenseUrl,
+    setLicenseUrl,
+  ] = useContext(DriverContext);
 
-    const Stack = createStackNavigator();
-    
+  const Stack = createStackNavigator();
+
+  const route = useRoute();
+
+  const name = route.params.name;
+  const image = route.params.image;
+  const email = route.params.email;
+
   return (
-
     <View style={styles.container}>
-        <View style={styles.box1}>
-          <DriverMap />
-        </View>
+      <View style={styles.box1}>
+        <DriverMap />
+      </View>
 
-        <View style = {styles.box2}>
-          <DriverNavigateCard/>
-        </View>
-        {/* <Stack.Navigator style={styles.box2}>
+      <View style={styles.box2}>
+        <DriverNavigateCard name={name} email = {email}/>
+      </View>
+      {/* <Stack.Navigator style={styles.box2}>
           <Stack.Screen
             name="NavigateCard"
             component={DriverNavigateCard}
@@ -38,7 +52,7 @@ export default function DriverBooking() {
           />
 
         </Stack.Navigator> */}
-      </View>
+    </View>
   );
 }
 
@@ -62,7 +76,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
 
 /* <View>
   <Text>Name: {driverDetails.passengerName}</Text>
