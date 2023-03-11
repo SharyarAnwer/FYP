@@ -160,7 +160,7 @@ export default function NavigateCard() {
         ListHeaderComponent={
           <>
             <Text style={styles.heading}>
-              Good Morning, {driverDetails.passengerName}
+              Good Morning, {driverDetails.driverName}
             </Text>
           </>
         }

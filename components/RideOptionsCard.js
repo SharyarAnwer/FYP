@@ -145,14 +145,6 @@ const styles = StyleSheet.create({
   backButton: {
     position: 'relative',
     left: -60,
-    /* backgroundColor: '#7788ef',
-    width: 35,
-    height: 35,
-    borderRadius: 45,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingRight: 5, */
   },
   ridesButton: {
     flexDirection: 'row',

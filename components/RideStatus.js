@@ -101,8 +101,26 @@ export default function RideStatus() {
           </View>
 
           <TouchableOpacity
+            onPress={() => {
+              //alert(item.PassengerName + "With this id: " + item.id + " ride was accepted")
+              const collectionRef = firestore().collection(
+                'RequestsFromPassenger',
+              );
+              const docRef = collectionRef.doc(item.id);
 
-          onPress={() => {alert(item.PassengerName + "With this id: " + item.id + " ride was accepted")}}
+              // Update the document with new data
+              docRef
+                .update({
+                  RequestStatus: "Accepted",
+                  /* key2: value2, */
+                })
+                .then(() => {
+                  console.log('Document updated successfully!');
+                })
+                .catch(error => {
+                  console.error('Error updating document: ', error);
+                });
+            }}
             style={{
               position: 'absolute',
               bottom: 25,
@@ -113,7 +131,7 @@ export default function RideStatus() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              borderRadius: 10
+              borderRadius: 10,
             }}>
             <Text
               style={{

@@ -31,11 +31,21 @@ import {useNavigation} from '@react-navigation/native';
 
 import Loader from './Loader';
 
-export default function PassengerInfo() {
+import firestore from '@react-native-firebase/firestore';
 
+export default function PassengerInfo() {
   const navigation = useNavigation();
 
-  const [driverDetails, setDriverDetails, vehicleInfo, setVehicleInfo, CNIC_url, setCNIC_url, licenseUrl, setLicenseUrl] = useContext(DriverContext);
+  const [
+    driverDetails,
+    setDriverDetails,
+    vehicleInfo,
+    setVehicleInfo,
+    CNIC_url,
+    setCNIC_url,
+    licenseUrl,
+    setLicenseUrl,
+  ] = useContext(DriverContext);
 
   /* These are the options for the dropdown for user o select if they hace a bike or a car. */
   const vehicleType = [
@@ -49,17 +59,6 @@ export default function PassengerInfo() {
     },
   ];
 
-  /* const options = [
-    {
-      id: 1,
-      name: 'Faculty member',
-    },
-    {
-      id: 2,
-      name: 'Student',
-    },
-  ]; */
-
   /* These 3 saves the name, number, and model of the vehicle */
   const [vehicleName, setVehicleName] = useState(null);
   const [vehicleNumber, setVehicleNumber] = useState(null);
@@ -70,7 +69,7 @@ export default function PassengerInfo() {
   const [isClicked, setIsClicked] = useState(false);
   const [data, setData] = useState(vehicleType);
 
-  /* These are the options for the seating capacity the user has in their vehicle */
+  /* /* These are the options for the seating capacity the user has in their vehicle 
   const seatingCapacity = [
     {
       id: 1,
@@ -90,15 +89,14 @@ export default function PassengerInfo() {
     },
   ];
 
-  /* These 3 come together to save the seating capacity of the vehicle. */
+  /* These 3 come together to save the seating capacity of the vehicle.
   const [capacity, setCapacity] = useState('Select Seating Capacity');
   const [isVehicleCap, setIsVehicleCap] = useState(false);
-  const [vehicleCap, setVehicleCap] = useState(seatingCapacity);
+  const [vehicleCap, setVehicleCap] = useState(seatingCapacity); */
 
   /* These 3 come together to save the front of the CNIC */
   const [cameraPhoto, setCameraPhoto] = useState(null);
   const [imageData, setImageData] = useState(null);
-  const [url, setUrl] = useState('');
 
   let cameraOptions = {
     saveToPhotos: true,
@@ -129,17 +127,15 @@ export default function PassengerInfo() {
     await reference.putFile(pathToFile);
     const url = await storage()
       .ref('CNIC_PICTURES/' + imageData.assets[0].fileName)
-      .getDownloadURL()
-    console.log("URL for CNIC: " + url);
-    /* setUrl(url) */
-
-    setCNIC_url(url)
+      .getDownloadURL();
+    /* console.log('URL for CNIC: ' + url); */
+    setCNIC_url(url);
   };
 
   /*THIS CODE WILL TAKE PICTURE OF LICENSE FRONT, UPLOAD IT TO FIRESTORE STORAGE, AND ALSO FETCH ITS URL*/
   const [licensePhoto, setLicensePhoto] = useState(null);
   const [licensePhotoData, setLicensePhotoData] = useState(null);
-  //const [licenseUrl, setLicenseUrl] = useState('');
+  const [firebaseLicense, setFirebaseLicense] = useState('');
 
   let licenseCameraOptions = {
     saveToPhotos: true,
@@ -170,37 +166,84 @@ export default function PassengerInfo() {
     await reference.putFile(pathToFile);
     const url = await storage()
       .ref('License_Front/' + licensePhotoData.assets[0].fileName)
-      .getDownloadURL()
-    console.log("URL for License: " + url);
-    //setLicenseUrl(url)
-
-    /* setVehicleInfo({
-      licenseUrl: url
-    }) */
-
-    setLicenseUrl(url)
+      .getDownloadURL();
+    /* console.log('URL for License: ' + url); */
+    setLicenseUrl(url);
   };
 
+  useEffect(() => {
+    if (CNIC_url != '' && licenseUrl != '') {
+      setLoaderVisible(true);
+
+      firestore()
+        .collection('Drivers')
+        .add({
+          Name: driverDetails.driverName,
+          Email: driverDetails.emailAddress,
+          MobileNumber: driverDetails.contactNumber,
+          ProfilePicture: driverDetails.profilePicture,
+          Department: driverDetails.emailAddress.substring(0, 2),
+          SZABISTid: driverDetails.emailAddress.substring(2, 9),
+          profileStatus: 'Verified',
+          CNIC_URL: CNIC_url,
+          License_URL: licenseUrl,
+        })
+        .then(() => {
+          console.log('User added successfully!');
+        });
+
+      navigation.navigate('Driver Booking');
+      setLoaderVisible(false);
+    }
+  }, [CNIC_url, licenseUrl]);
+
   const navigateToNextPage = async () => {
-    setLoaderVisible(true)
-    const uploadImagePromise = uploadImage();
+    setLoaderVisible(true);
+
+    uploadImage()
+    uploadLicenseImage()
+    /* const uploadImagePromise = uploadImage();
     const uploadLicenseImagePromise = uploadLicenseImage();
-  
-    await Promise.all([uploadImagePromise, uploadLicenseImagePromise]);
+
+    const [imageUploadSuccess, LicenseSuccess] = await Promise.all([
+      uploadImagePromise,
+      uploadLicenseImagePromise,
+    ]);
+
+    console.log(imageUploadSuccess);
+    console.log(LicenseSuccess);
 
     setVehicleInfo({
       vehicleName: vehicleName,
       vehicleNumber: vehicleNumber,
       vehicleModel: vehicleModel,
       vehicleType: selectVehicle,
-      seatingCapacity: capacity,
-    })
-  
-    navigation.navigate("Driver Booking");
-    setLoaderVisible(false)
-  }
+      /* seatingCapacity: capacity,
+    });
+
+    firestore()
+      .collection('Drivers')
+      .add({
+        Name: driverDetails.driverName,
+        Email: driverDetails.emailAddress,
+        MobileNumber: driverDetails.contactNumber,
+        ProfilePicture: driverDetails.profilePicture,
+        Department: driverDetails.emailAddress.substring(0, 2),
+        SZABISTid: driverDetails.emailAddress.substring(2, 9),
+        profileStatus: 'Verified',
+        CNIC_URL: CNIC_url,
+        License_URL: licenseUrl,
+      })
+      .then(() => {
+        console.log('User added successfully!');
+      });
+
+    navigation.navigate('Driver Booking');
+    setLoaderVisible(false); */
+  };
 
   const [loaderVisible, setLoaderVisible] = useState(false);
+
   return (
     <View style={DriverInfoStyling.main_view}>
       {loaderVisible && <Loader />}
@@ -275,7 +318,7 @@ export default function PassengerInfo() {
         ) : null}
       </View>
 
-      <View style={second_dropdown.container}>
+      {/* <View style={second_dropdown.container}>
         <TouchableOpacity
           style={second_dropdown.selector}
           onPress={() => {
@@ -309,7 +352,7 @@ export default function PassengerInfo() {
             />
           </View>
         ) : null}
-      </View>
+      </View> */}
 
       <View
         style={{
@@ -329,8 +372,7 @@ export default function PassengerInfo() {
 
         <TouchableOpacity
           style={DriverInfoStyling.licenseFront}
-          onPress={openLicenseCamera}
-        >
+          onPress={openLicenseCamera}>
           <Text>License Front</Text>
           <Entypo name="upload-to-cloud" color={'#4772FF'} size={30}></Entypo>
         </TouchableOpacity>
@@ -353,7 +395,7 @@ export default function PassengerInfo() {
             borderRadius: 10,
           }}
           onPress={() => {
-            navigateToNextPage()
+            navigateToNextPage();
             /* uploadImage();
             uploadLicenseImage() */
 
@@ -365,11 +407,11 @@ export default function PassengerInfo() {
               seatingCapacity: capacity,
             })
  */
-            console.log("Vehicle Name: " + vehicleInfo.vehicleName)
+            /* console.log("Vehicle Name: " + vehicleInfo.vehicleName)
             console.log("Vehicle Number: " + vehicleInfo.vehicleNumber)
             console.log("Vehicle Model: " + vehicleInfo.vehicleModel)
             console.log("Vehicle Type: " + vehicleInfo.vehicleType)
-            console.log("Vehicle Capacity: " + vehicleInfo.seatingCapacity)
+            console.log("Vehicle Capacity: " + vehicleInfo.seatingCapacity) */
 
             /* navigation.navigate("Driver Booking") */
           }}>

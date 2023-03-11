@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext , useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import DriverContext from '../Context/driver/DriverContext';
 
@@ -17,6 +17,7 @@ export default function DriverBooking() {
     useContext(DriverContext);
 
     const Stack = createStackNavigator();
+    
   return (
 
     <View style={styles.container}>

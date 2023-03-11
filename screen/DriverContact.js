@@ -164,22 +164,14 @@ const PassengerContact = () => {
 
       /* The setDriverDetails saves the name, contactNumber & delivery address in DriverState.js  */
       setDriverDetails({
-        passengerName: name,
+        driverName: name,
         contactNumber: phoneData,
         emailAddress: email,
-        profilePicture: image
+        profilePicture: image,
+        department: email.substring(0, 2),
+        SZABISTid: email.substring(2, 9)
       })
 
-      /* firestore()
-        .collection('Users')
-        .add({
-          Name: name,
-          Email: email,
-          Mobile_number: phoneData,
-        })
-        .then(() => {
-          console.log('User added successfully!');
-        }); */
     } catch (error) {
       console.log(code);
       setCode('');

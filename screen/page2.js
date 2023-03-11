@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 
 /* All components which we are using should be imported from react-native. Here we have imported Text , View , TouchableOpacity.*/
 import {Text, View, TouchableOpacity, Image, Animated} from 'react-native';
@@ -12,7 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {useNavigation} from '@react-navigation/native';
-import {Navigation} from 'react-native-navigation'
+import {Navigation} from 'react-native-navigation';
 /*Allows us to use google sign in functionality.  */
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
@@ -26,7 +26,45 @@ import Dropdown from '../components/dropdown';
 import {FadeOutToBottomAndroidSpec} from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionSpecs';
 import DriverInfo from './DriverInfo';
 
+import firestore from '@react-native-firebase/firestore';
+
+import Loader from './Loader';
+
+//This is used to import data from LocationContext.js
+import LocationContext from '../Context/location/LocationContext';
+
+import DriverContext from '../Context/driver/DriverContext';
+
 export default function Page2() {
+  /* This makes a connection between RideOptionCard.js and LocationState.js.  */
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+  ] = useContext(LocationContext);
+
+  const [
+    driverDetails,
+    setDriverDetails,
+    vehicleInfo,
+    setVehicleInfo,
+    CNIC_url,
+    setCNIC_url,
+    licenseUrl,
+    setLicenseUrl,
+    startingPointLocation,
+    setStartingPointLocation,
+    endingPointLocation,
+    setEndingPointLocation,
+    scheduleTime,
+    setScheduleTime,
+  ] = useContext(DriverContext);
+
   const navigation = useNavigation();
 
   const route = useRoute();
@@ -35,16 +73,72 @@ export default function Page2() {
 
   const [option, setOption] = useState(false);
 
+  const [passengerArray, setpassengerArray] = useState([]);
+  const [driverArray, setDriverArray] = useState([]);
+
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const collection1Ref = firestore().collection('Drivers');
+    const collection2Ref = firestore().collection('Passengers');
+
+    const promises = [];
+
+    promises.push(collection1Ref.get());
+    promises.push(collection2Ref.get());
+
+    Promise.all(promises)
+      .then(snapshots => {
+        const collection1Data = snapshots[0].docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setDriverArray(collection1Data);
+
+        const collection2Data = snapshots[1].docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setpassengerArray(collection2Data);
+      })
+      .catch(error => {
+        console.log('Error getting documents: ', error);
+      });
+
+    setTimeout(() => {
+      setVisible(false);
+    }, 2000);
+  }, []);
+
   return (
     <View style={page2styling.view}>
-      {/* <Text>{route.params.name}</Text> */}
+      {visible && <Loader />}
+      
       {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
       <TouchableOpacity
         style={page2styling.button1}
         onPress={() => {
-          navigation.navigate('Passenger Contact' , {name: route.params.name , email : route.params.email , image : imageUrl})} } 
-          /* navigation.navigate('Available Drivers') }} */ >
-
+          
+          if (
+            passengerArray.some(passenger => passenger !== null && passenger.profileStatus === 'Verified' && passenger.Email === route.params.email)
+            /* passengerArray[0] != null &&
+            passengerArray[0].profileStatus === 'Verified' &&
+            passengerArray[0].Email === route.params.email */
+          ) {
+            navigation.navigate('Book A Ride', {
+              name: route.params.name,
+              email: route.params.email,
+              image: imageUrl,
+            });
+          } else {
+            navigation.navigate('Passenger Contact', {
+              name: route.params.name,
+              email: route.params.email,
+              image: imageUrl,
+            });
+          }
+          
+        }}>
         <View style={page2styling.i_need_a_ride_button}>
           <Text style={page2styling.buttonText1}>I need a ride</Text>
 
@@ -60,9 +154,30 @@ export default function Page2() {
       </TouchableOpacity>
 
       {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
-      <TouchableOpacity style={page2styling.button2}
-      /* onPress={ () => {navigation.navigate('Driver Booking'  , {name: route.params.name , email : route.params.email , image : imageUrl})}} */ 
-      onPress={ () => {navigation.navigate('Driver Contact'  , {name: route.params.name , email : route.params.email , image : imageUrl})}} >
+      <TouchableOpacity
+        style={page2styling.button2}
+        /* onPress={ () => {navigation.navigate('Driver Booking'  , {name: route.params.name , email : route.params.email , image : imageUrl})}} */
+        onPress={() => {
+          console.log(driverArray[0]);
+          if (
+            driverArray.some(driver => driver !== null && driver.profileStatus === 'Verified' && driver.Email === route.params.email)
+            /* (driverArray[0] != null) &&
+            (driverArray[0].profileStatus === 'Verified') &&
+            (driverArray[0].Email === route.params.email) */
+          ) {
+            navigation.navigate('Driver Booking', {
+              name: route.params.name,
+              email: route.params.email,
+              image: imageUrl,
+            });
+          } else {
+            navigation.navigate('Driver Contact', {
+              name: route.params.name,
+              email: route.params.email,
+              image: imageUrl,
+            });
+          }
+        }}>
         <View style={page2styling.i_am_driving_button}>
           <Text style={page2styling.buttonText2}>I am driving</Text>
 
@@ -74,19 +189,6 @@ export default function Page2() {
         </View>
       </TouchableOpacity>
 
-      {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
-      {/* <TouchableOpacity style={page2styling.button2} onPress = {route.params.signout}>
-        <View style = {page2styling.i_am_driving_button} >
-          <Text style={page2styling.buttonText2}>Sign Out</Text>
-
-          {/* This line was used to create a circle shape.}
-          <Text style={page2styling.circle2}>
-
-            {/* This line of code makes an arrow. The arrow was imported from AntDesign and used in our button.}
-            <AntDesign name='arrowright' color={'white'} size={30}></AntDesign>
-          </Text>
-        </View>
-      </TouchableOpacity> */}
 
       <TouchableOpacity
         style={page2styling.signOutButton}

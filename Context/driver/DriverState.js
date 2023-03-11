@@ -16,10 +16,12 @@ import DriverContext from './DriverContext';
 
 const DriverState = props => {
   const personalDetails = {
-    passengerName: 'Name',
+    driverName: 'Name',
     contactNumber: 'Phone Number',
     emailAddress: 'Email Address',
-    profilePicture: 'Profile Picture'
+    profilePicture: 'Profile Picture',
+    department: "Department",
+    SZABISTid: "ID"
   };
   const [driverDetails, setDriverDetails] = useState(personalDetails);
 

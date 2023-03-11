@@ -168,19 +168,25 @@ const PassengerContact = () => {
         passengerName: name,
         contactNumber: phoneData,
         emailAddress: email,
-        profilePicture: image
+        profilePicture: image,
+        department: email.substring(0, 2),
+        SZABISTid: email.substring(2,9)
       })
 
-      /* firestore()
-        .collection('Users')
+      firestore()
+        .collection('Passengers')
         .add({
           Name: name,
           Email: email,
           Mobile_number: phoneData,
+          ProfilePicture: image,
+          Department: email.substring(0, 2),
+          SZABISTid: email.substring(2, 9),
+          profileStatus: 'Verified'
         })
         .then(() => {
           console.log('User added successfully!');
-        }); */
+        });
     } catch (error) {
       console.log(code);
       setCode('');
