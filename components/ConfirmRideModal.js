@@ -207,8 +207,6 @@ export default function ConfirmRideModal({
                 setConfirmRequest(true);
                 updateConfirmRide(true);
 
-                /* alert(passengerDetails.passengerName + " requested a ride\n" + "Pickup Location: " + location.description + "\n" + "DropOff Location: " + dropOffLocation.description + "\n" + "Requested Seats: " + count) */
-
                 firestore()
                   .collection('RequestsFromPassenger')
                   .add({
@@ -219,7 +217,9 @@ export default function ConfirmRideModal({
                     PassengerPickupTime: scheduleTime.time,
                     RequestedSeats: count,
                     DriverName: profile.Name,
-                    Status : 'Pending'
+                    Status : 'Pending',
+                    DriverDocumentId : profile.id,
+                    collectionId : 'RidesPostedByDriver'
                   })
                   .then(() => {
                     console.log('User added successfully!');

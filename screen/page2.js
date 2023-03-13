@@ -115,20 +115,27 @@ export default function Page2() {
   return (
     <View style={page2styling.view}>
       {visible && <Loader />}
-      
+
       {/* Touchable Opacity was used to create a custom button. We cannot use the default button because styling cannot be applied to the default button in react native. */}
       <TouchableOpacity
         style={page2styling.button1}
         onPress={() => {
-          
           if (
-            passengerArray.some(passenger => passenger !== null && passenger.profileStatus === 'Verified' && passenger.Email === route.params.email)
+            passengerArray.some(
+              passenger =>
+                passenger !== null &&
+                passenger.profileStatus === 'Verified' &&
+                passenger.Email === route.params.email,
+            )
             /* passengerArray[0] != null &&
             passengerArray[0].profileStatus === 'Verified' &&
             passengerArray[0].Email === route.params.email */
           ) {
-
-            setPassengerDetails({passengerName: name , emailAddress: email, profilePicture : imageUrl})
+            setPassengerDetails({
+              passengerName: name,
+              emailAddress: email,
+              profilePicture: imageUrl,
+            });
             navigation.navigate('Book A Ride', {
               name: route.params.name,
               email: route.params.email,
@@ -141,7 +148,6 @@ export default function Page2() {
               image: imageUrl,
             });
           }
-          
         }}>
         <View style={page2styling.i_need_a_ride_button}>
           <Text style={page2styling.buttonText1}>I need a ride</Text>
@@ -164,7 +170,12 @@ export default function Page2() {
         onPress={() => {
           console.log(driverArray[0]);
           if (
-            driverArray.some(driver => driver !== null && driver.profileStatus === 'Verified' && driver.Email === route.params.email)
+            driverArray.some(
+              driver =>
+                driver !== null &&
+                driver.profileStatus === 'Verified' &&
+                driver.Email === route.params.email,
+            )
             /* (driverArray[0] != null) &&
             (driverArray[0].profileStatus === 'Verified') &&
             (driverArray[0].Email === route.params.email) */
@@ -193,7 +204,6 @@ export default function Page2() {
         </View>
       </TouchableOpacity>
 
-
       <TouchableOpacity
         style={page2styling.signOutButton}
         /* onPress={route.params.signout} */
@@ -210,6 +220,26 @@ export default function Page2() {
             name="caretup"
             color={'#4772FF'}
             size={30}></AntDesign>
+
+          <TouchableOpacity>
+            <Text style={page2styling.signOut}>Passenger's Request</Text>
+          </TouchableOpacity>
+
+          <View style = {{width: '100%' , backgroundColor: '#ffffff' , height: 1}} />
+          
+          <TouchableOpacity 
+           onPress={() => {
+            navigation.navigate("Ride Status" , {
+              name: route.params.name,
+              email: route.params.email,
+              image: imageUrl,
+            })
+           }}>
+            <Text style={page2styling.signOut}>Driver's Request</Text>
+          </TouchableOpacity>
+
+          <View style = {{width: '100%' , backgroundColor: '#ffffff' , height: 1}} />
+
           <TouchableOpacity
             style={page2styling.option1}
             onPress={() => {
