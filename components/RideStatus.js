@@ -16,7 +16,6 @@ import {useRoute} from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 
 export default function RideStatus() {
-
   const route = useRoute();
   const name = route.params.name;
   const image = route.params.image;
@@ -37,19 +36,14 @@ export default function RideStatus() {
   const updateConfirmRide = confirm => {
     setConfirmRide(confirm);
   };
-
-  useEffect(() => {
-    console.log('State was update: ' + confirmRide);
-  }, [confirmRide]);
-
-  const renderItem = ({item}) => {
-
-    const theRequestedDriver = driverDataFromFirebase.find(item => driverDataFromFirebase.id === item.DriverDocumentId);
+  
+  const renderItem = ({item , index}) => {
+    /* const theRequestedDriver = driverDataFromFirebase.find(item => driverDataFromFirebase.id === item.DriverDocumentId); */
 
     return (
       <TouchableOpacity
         style={styles.card}
-                /* onPress={() => {
+        /* onPress={() => {
           alert(`Pressed on ${driverDataFromFirebase[0]}`);
         }} */
       >
@@ -170,27 +164,23 @@ export default function RideStatus() {
           </Text>
 
           <Text>
-            Pickup Date: {theRequestedDriver.DepartureDate}
+            Pickup Date: {theRequestedDriver[index] ? theRequestedDriver[index].DepartureDate : ""}
           </Text>
 
-          <Text>
-            Pickup Time: {theRequestedDriver.DepartureTime}
-          </Text>
+          <Text>Pickup Time: {theRequestedDriver[index] ? theRequestedDriver[index].DepartureTime : ""}</Text>
 
           <Text>
-            Starting Location: {theRequestedDriver.StartingPoint} 
+            Starting Location: {theRequestedDriver[index] ? theRequestedDriver[index].StartingPoint : ""}
           </Text>
 
-          <Text>
-            Destination: {theRequestedDriver.EndingPoint} 
-          </Text>
+          <Text>Destination: {theRequestedDriver[index] ? theRequestedDriver[index].EndingPoint : ""}</Text>
 
           <TouchableOpacity
             onPress={() => {
               //alert(item.PassengerName + "With this id: " + item.id + " ride was accepted")
               const collectionRef = firestore().collection(
                 'RequestsFromPassenger',
-              ) ;
+              );
               const docRef = collectionRef.doc(item.id);
 
               // Update the document with new data
@@ -210,9 +200,9 @@ export default function RideStatus() {
             }}
             style={{
               position: 'absolute',
-              bottom: 15,
+              bottom: 50,
               right: 15,
-              width: 150,
+              width: 363,
               height: 50,
               backgroundColor: '#7788ef',
               display: 'flex',
@@ -266,9 +256,8 @@ export default function RideStatus() {
       });
   }, [dataArray]);
 
-
   /* This UseEffect and UseState are used to fetch and store data in array  driverDataFromFirebase*/
-  const [driverDataFromFirebase, setDriverDataFromFirebase] = useState([])
+  const [driverDataFromFirebase, setDriverDataFromFirebase] = useState([]);
   useEffect(() => {
     const collectionRef = firestore().collection('RidesPostedByDriver'); // your collection reference here
     collectionRef
@@ -283,8 +272,42 @@ export default function RideStatus() {
         setDriverDataFromFirebase(dataArray);
       });
   }, [driverDataFromFirebase]);
-  
 
+  /* let theRequestedDriver = ''; */
+  const [theRequestedDriver, setTheRequestedDriver] = useState('');
+
+  useEffect(() => {
+    if (dataArray.length > 0 && driverDataFromFirebase.length > 0) {
+      /* for (let index = 0; index < dataArray.length; index++) {
+        setTheRequestedDriver (driverDataFromFirebase.find(
+          item => item.id === dataArray[index].DriverDocumentId,
+        ))
+      } */
+    }
+
+    /* console.log(theRequestedDriver.Name); */
+
+    if (dataArray.length > 0 && driverDataFromFirebase.length > 0) {
+      /* setTheRequestedDriver(
+        driverDataFromFirebase.filter(driver =>
+          dataArray.some(data => data.DriverDocumentId === driver.id),
+        )
+      ); */
+
+      setTheRequestedDriver(
+        dataArray.filter(data =>
+          driverDataFromFirebase.some(driver => driver.id === data.DriverDocumentId)
+        ).map(data =>
+          driverDataFromFirebase.find(driver => driver.id === data.DriverDocumentId)
+        )
+      );
+
+      if (theRequestedDriver.length != 0) {
+        console.log(`I AM FIRST DRIVER ${theRequestedDriver[0].id ? theRequestedDriver[0].id : 'false'}`);
+        console.log(`I AM SECOND DRIVER  ${theRequestedDriver[1] ? theRequestedDriver[1].id : 'false'} `);
+      }
+    }
+  }, [dataArray, driverDataFromFirebase]);
 
   return (
     <View style={styles.container}>
@@ -323,11 +346,11 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width,
-    height: 550,
+    height: 540,
     backgroundColor: 'white',
     borderRadius: 10,
-    elevation: 4,/* 
-    justifyContent: 'center', */
+    elevation: 4 /* 
+    justifyContent: 'center', */,
     alignItems: 'center',
     marginBottom: 10,
     display: 'flex',
@@ -340,27 +363,27 @@ const styles = StyleSheet.create({
     borderBottomColor: 'grey',
     borderBottomWidth: 0.5,
     paddingLeft: 10,
-    paddingTop: 5
+    paddingTop: 5,
   },
   partition2: {
     width: '100%',
-    height: '40%',/* 
+    height: '40%' /* 
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center', */
+    alignItems: 'center', */,
     borderBottomColor: 'grey',
     borderBottomWidth: 0.5,
-    /* paddingLeft: 10, */
+    paddingLeft: 10,
     paddingTop: 10,
   },
   partition3: {
     width: '100%',
     height: '50%',
     flexDirection: 'column',
-    /* alignItems: 'center', *//* 
+    /* alignItems: 'center', */ /* 
     justifyContent: 'center', */
     paddingLeft: 10,
-    paddingTop: 10
+    paddingTop: 10,
   },
   image: {
     position: 'absolute',
@@ -401,12 +424,12 @@ const styles = StyleSheet.create({
     /* marginVertical: 0, */
     width: '100%',
     height: '80%',
-    marginTop: 10,
+    marginTop: 5,
   },
   buttonVerify: {
     backgroundColor: '#7788ef',
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 5,
     /* width: '100%',
       height: '100%', */
     alignItems: 'center',

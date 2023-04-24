@@ -221,7 +221,13 @@ export default function Page2() {
             color={'#4772FF'}
             size={30}></AntDesign>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("Passenger Ride Status" , {
+              name: route.params.name,
+              email: route.params.email,
+              image: imageUrl,
+            })
+           }}>
             <Text style={page2styling.signOut}>Passenger's Request</Text>
           </TouchableOpacity>
 

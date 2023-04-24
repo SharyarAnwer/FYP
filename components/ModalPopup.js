@@ -67,7 +67,10 @@ export default function ModalPopup({
           {/* {children} */}
           <View style={{alignItems: 'center'}}>
             <View style={modalStyles.header}>
-              <TouchableOpacity onPress={() => setVisible(false)}>
+              <TouchableOpacity onPress={() => {
+                setVisible(false)
+                navigation.pop(screensToPop);
+                } }>
                 <Image
                   source={require('../Assets/remove.png')}
                   style={{height: 30, width: 30}}></Image>
@@ -95,7 +98,7 @@ export default function ModalPopup({
                 flexShrink: 2,
                 marginTop: 'auto',
               }}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
                   navigation.pop(screensToPop);
                   navigation.navigate(buttonLink);
@@ -124,7 +127,9 @@ export default function ModalPopup({
                   }}>
                   Check Your Ride Status
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+
+              <Text style = {{fontSize: 15, fontWeight: '400' ,textAlign: 'center'}} >You Can Check Your Ride Status From "Driver's Request" section</Text>
             </View>
           )}
         </Animated.View>

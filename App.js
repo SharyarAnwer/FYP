@@ -28,7 +28,7 @@ import DriverContact from './screen/DriverContact';
 
 import RideStatus from './components/RideStatus';
 
-
+import PassengerRideStatus from './components/PassengerRideStatus';
 
 export default function App() {
   /*  */
@@ -110,6 +110,13 @@ export default function App() {
               name="Ride Status"
               component={RideStatus}
             />
+
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Passenger Ride Status"
+              component={PassengerRideStatus}
+            />
+
           </Stack.Navigator>
         </NavigationContainer>
       </LocationState>
