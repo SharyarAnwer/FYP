@@ -84,7 +84,7 @@ export default function RideOptionsCard() {
               {/* <Text>7 Available Rides Today</Text> */}
             </View>
 
-            <Text style={styles.money}>7 Rides Available</Text>
+            <Text style={styles.money}>Price...</Text>
           </TouchableOpacity>
         )}
       />

@@ -5,14 +5,19 @@ import LocationContext from '../Context/location/LocationContext';
 import MapViewDirections from 'react-native-maps-directions';
 
 export default function Map() {
-  const [location, setLocation, dropOffLocation, setDropOffLocation] = useContext(LocationContext);
+  const [location, setLocation, dropOffLocation, setDropOffLocation] =
+    useContext(LocationContext);
 
-  const origin = {latitude: location.latitude, longitude: location.longitude, description: location.description};
+  const origin = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    description: location.description,
+  };
 
   const destination = {
     latitude: dropOffLocation.latitude,
     longitude: dropOffLocation.longitude,
-    description: dropOffLocation.description
+    description: dropOffLocation.description,
   };
   const GOOGLE_MAPS_APIKEY = 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4';
 
@@ -26,7 +31,22 @@ export default function Map() {
       {edgePadding: {top: 70, right: 50, bottom: 50, left: 50}},
     );
   }, [origin, destination]);
-  
+
+  useEffect(() => {
+    if (!origin || !destination) return;
+
+    const getTravelTime = async () => {
+
+      await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${encodeURIComponent(destination.description)}&origins=${encodeURIComponent(origin.description)}&units=imperial&key=${GOOGLE_MAPS_APIKEY}`).then((res) => res.json()).then(data => {
+        console.log("I AM THE DATA" , data.rows[0].elements[0].distance.text)
+      }).catch((error) => {
+        console.log("I AM THE ERROR" , error)
+      }) ;
+
+    };
+
+    getTravelTime();
+  }, [origin, destination, GOOGLE_MAPS_APIKEY]);
 
   return (
     <View>
@@ -40,7 +60,6 @@ export default function Map() {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         }}>
-
         {location.longitude !== 0 &&
           location.latitude !== 0 &&
           dropOffLocation.longitude !== 0 &&
