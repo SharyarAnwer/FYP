@@ -24,6 +24,8 @@ export default function ConfirmRideModal({
     setRideType,
     scheduleTime,
     setScheduleTime,
+    kilometers,
+    setKilometers
   ] = useContext(LocationContext);
 
   const [confirmRequest, setConfirmRequest] = useState(false);
@@ -219,7 +221,10 @@ export default function ConfirmRideModal({
                     DriverName: profile.Name,
                     Status : 'Pending',
                     DriverDocumentId : profile.id,
-                    collectionId : 'RidesPostedByDriver'
+                    collectionId : 'RidesPostedByDriver',
+                    distance: kilometers,
+                    vehicleType: ride.vehicleType,
+                    payment: ride.vehicleType === 'Bike' ? kilometers * 50 : kilometers * 100 
                   })
                   .then(() => {
                     console.log('User added successfully!');

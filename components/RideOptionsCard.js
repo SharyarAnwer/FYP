@@ -10,17 +10,29 @@ import {
 import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
-import {useState , useContext , useEffect} from 'react';
+import {useState, useContext, useEffect} from 'react';
 
 //This is used to import data from LocationContext.js
 import LocationContext from '../Context/location/LocationContext';
 
 export default function RideOptionsCard() {
-
   const navigation = useNavigation();
 
   /* This makes a connection between RideOptionCard.js and LocationState.js.  */
-  const [location, setLocation, dropOffLocation, setDropOffLocation, passengerDetails, setPassengerDetails, ride, setRideType] = useContext(LocationContext);
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+    scheduleTime,
+    setScheduleTime,
+    kilometers,
+    setKilometers,
+  ] = useContext(LocationContext);
 
   const rideOptions = [
     {
@@ -39,11 +51,80 @@ export default function RideOptionsCard() {
 
   /* This useEffect sends and save vehicle type to LocationState.js */
   useEffect(() => {
+    console.log("DID YOU GET THE VEHICLE: " , selected.title)
     setRideType({
-      vehicleType : selected.title
-    })
-  }, [selected])
-  
+      vehicleType: selected.title /* ,
+      price: 'Rs 0',
+      distance: '0 Km', */,
+    });
+  }, [selected]);
+
+  const origin = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    description: location.description,
+  };
+
+  const destination = {
+    latitude: dropOffLocation.latitude,
+    longitude: dropOffLocation.longitude,
+    description: dropOffLocation.description,
+  };
+
+  const GOOGLE_MAPS_APIKEY = 'AIzaSyCDONMlPUu--Fepxz5C7-cqfopYRa12FB4';
+
+  function updateTravellingDistance(distance) {
+    console.log('SOMETHING HERE', distance);
+    setKilometers(state => ({
+      ...state,
+      dist: distance,
+    }));
+    console.log('SOMETHING HERE AS WELL1357911', kilometers.dist);
+  }
+
+  const [totalDistance, setTotalDistance] = useState(0);
+
+  useEffect(() => {
+    setKilometers(totalDistance);
+  }, [totalDistance]);
+
+  useEffect(
+    () => {
+      if (!origin || !destination) return;
+
+      const getTravelTime = async () => {
+        await fetch(
+          `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${encodeURIComponent(
+            destination.description,
+          )}&origins=${encodeURIComponent(
+            origin.description,
+          )}&units=imperial&key=${GOOGLE_MAPS_APIKEY}`,
+        )
+          .then(res => res.json())
+          .then(data => {
+            console.log('Distance:', data.rows[0].elements[0].distance.text);
+
+            //updateTravellingDistance(data.rows[0].elements[0].distance.text)
+            setTotalDistance(
+              Math.trunc(
+                parseInt(data.rows[0].elements[0].distance.text) * 1.6,
+              ),
+            );
+
+            console.log(kilometers.dist);
+          })
+          .catch(error => {
+            console.log('I AM THE ERROR', error);
+          });
+      };
+
+      getTravelTime();
+    },
+    [
+      /* origin, destination,  GOOGLE_MAPS_APIKEY */
+    ],
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -80,11 +161,16 @@ export default function RideOptionsCard() {
               source={image}
             />
             <View>
-              <Text style={{fontSize: 20, fontWeight: '600', color: 'black'}}>{title}</Text>
+              <Text style={{fontSize: 20, fontWeight: '600', color: 'black'}}>
+                {/* {title} */}
+                {kilometers} Km
+              </Text>
               {/* <Text>7 Available Rides Today</Text> */}
             </View>
 
-            <Text style={styles.money}>Price...</Text>
+            <Text style={styles.money}>Rs
+              {title === 'Bike' ? kilometers * 50 : kilometers * 100}
+            </Text>
           </TouchableOpacity>
         )}
       />
@@ -97,15 +183,15 @@ export default function RideOptionsCard() {
         }}>
         <TouchableOpacity
           onPress={() => {
-            console.log(passengerDetails)
-            navigation.navigate("Available Drivers")
+            console.log(passengerDetails);
+            navigation.navigate('Available Drivers');
           }}
           disabled={!selected}
           style={[
             styles.showRiders,
             !selected && {backgroundColor: '#d3d3d3'},
           ]}>
-          <Text style={styles.buttonText}>Show Available Drivers</Text>
+          <Text style={styles.buttonText}>Show Available Drivers </Text>
           {/* <Text style = {styles.buttonText}>Choose {selected?.title} </Text> */}
         </TouchableOpacity>
       </View>
@@ -121,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
     borderTopRightRadius: 40,
-    borderTopLeftRadius: 40
+    borderTopLeftRadius: 40,
   },
   header: {
     display: 'flex',
@@ -156,11 +242,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 10,
-    height: 100
+    height: 100,
   },
   money: {
-    fontSize: 15,
-    color: 'black'
+    fontSize: 16,
+    color: 'black',
     /* fontWeight: 'bold', */
   },
   showRiders: {

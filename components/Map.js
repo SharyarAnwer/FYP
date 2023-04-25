@@ -5,8 +5,20 @@ import LocationContext from '../Context/location/LocationContext';
 import MapViewDirections from 'react-native-maps-directions';
 
 export default function Map() {
-  const [location, setLocation, dropOffLocation, setDropOffLocation] =
-    useContext(LocationContext);
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+    scheduleTime,
+    setScheduleTime,
+    kilometers,
+    setKilometers,
+  ] = useContext(LocationContext);
 
   const origin = {
     latitude: location.latitude,
@@ -31,22 +43,41 @@ export default function Map() {
       {edgePadding: {top: 70, right: 50, bottom: 50, left: 50}},
     );
   }, [origin, destination]);
+  
+  /* function updateTravellingDistance(distance) {
+    console.log("SOMETHING HERE" , distance)
+    setKilometers({
+      dist : distance
+    })
+    console.log("SOMETHING HERE AS WELL13" , kilometers.dist)
+  }
 
   useEffect(() => {
     if (!origin || !destination) return;
 
     const getTravelTime = async () => {
-
-      await fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${encodeURIComponent(destination.description)}&origins=${encodeURIComponent(origin.description)}&units=imperial&key=${GOOGLE_MAPS_APIKEY}`).then((res) => res.json()).then(data => {
-        console.log("I AM THE DATA" , data.rows[0].elements[0].distance.text)
-      }).catch((error) => {
-        console.log("I AM THE ERROR" , error)
-      }) ;
-
+      await fetch(
+        `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${encodeURIComponent(
+          destination.description,
+        )}&origins=${encodeURIComponent(
+          origin.description,
+        )}&units=imperial&key=${GOOGLE_MAPS_APIKEY}`,
+      )
+        .then(res => res.json())
+        .then(data => {
+          console.log('Distance1234567:', data.rows[0].elements[0].distance.text);
+          updateTravellingDistance(data.rows[0].elements[0].distance.text)
+          /* setDistance((state) => ({
+            ...state , dist : data.rows[0].elements[0].distance.text
+          })) 
+        })
+        .catch(error => {
+          console.log('I AM THE ERROR', error);
+        });
     };
 
     getTravelTime();
-  }, [origin, destination, GOOGLE_MAPS_APIKEY]);
+  }, [origin, destination,  GOOGLE_MAPS_APIKEY]); */
 
   return (
     <View>

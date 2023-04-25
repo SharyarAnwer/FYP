@@ -44,7 +44,9 @@ const LocationState = props => {
 
   /* This will store the vehicle which the user has choosen. */
   const vehicle = {
-    vehicleType: "TRUCK"
+    vehicleType: "TRUCK",
+    /* price: "Rs 0",
+    distance: "0 Km" */
   }
   const [ride, setRideType] = useState(vehicle)
 
@@ -55,8 +57,13 @@ const LocationState = props => {
   }
   const [scheduleTime, setScheduleTime] = useState(schedule)
 
+  /* const distance = {
+    dist : 0
+  } */
+  const [kilometers , setKilometers] = useState(0)
+
   return (
-    <LocationContext.Provider value={[location , setLocation , dropOffLocation, setDropOffLocation , passengerDetails, setPassengerDetails, ride, setRideType, scheduleTime, setScheduleTime]} >
+    <LocationContext.Provider value={[location , setLocation , dropOffLocation, setDropOffLocation , passengerDetails, setPassengerDetails, ride, setRideType, scheduleTime, setScheduleTime , kilometers , setKilometers]} >
       {props.children}
     </LocationContext.Provider>
   );
