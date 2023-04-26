@@ -36,8 +36,8 @@ export default function RideStatus() {
   const updateConfirmRide = confirm => {
     setConfirmRide(confirm);
   };
-  
-  const renderItem = ({item , index}) => {
+
+  const renderItem = ({item, index}) => {
     /* const theRequestedDriver = driverDataFromFirebase.find(item => driverDataFromFirebase.id === item.DriverDocumentId); */
 
     return (
@@ -164,16 +164,39 @@ export default function RideStatus() {
           </Text>
 
           <Text>
-            Pickup Date: {theRequestedDriver[index] ? theRequestedDriver[index].DepartureDate : ""}
+            Pickup Date:{' '}
+            {theRequestedDriver[index]
+              ? theRequestedDriver[index].DepartureDate
+              : ''}
           </Text>
-
-          <Text>Pickup Time: {theRequestedDriver[index] ? theRequestedDriver[index].DepartureTime : ""}</Text>
 
           <Text>
-            Starting Location: {theRequestedDriver[index] ? theRequestedDriver[index].StartingPoint : ""}
+            Pickup Time:{' '}
+            {theRequestedDriver[index]
+              ? theRequestedDriver[index].DepartureTime
+              : ''}
           </Text>
 
-          <Text>Destination: {theRequestedDriver[index] ? theRequestedDriver[index].EndingPoint : ""}</Text>
+          <Text>
+            Starting Location:{' '}
+            {theRequestedDriver[index]
+              ? theRequestedDriver[index].StartingPoint
+              : ''}
+          </Text>
+
+          <Text>
+            Destination:{' '}
+            {theRequestedDriver[index]
+              ? theRequestedDriver[index].EndingPoint
+              : ''}
+          </Text>
+
+          {
+            <Text>
+              Id :{' '}
+              {theRequestedDriver[index] ? theRequestedDriver[index].id : ''}{' '}
+            </Text>
+          }
 
           <TouchableOpacity
             onPress={() => {
@@ -196,11 +219,36 @@ export default function RideStatus() {
                   console.error('Error updating document: ', error);
                 });
 
+              /* New */
+              const driverRef = firestore().collection('RidesPostedByDriver');
+              const driverDocRef = driverRef.doc(theRequestedDriver[index].id);
+
+              // Update the document with new data
+
+              /* console.log("Seats Remaining" , typeof theRequestedDriver[index].EndingPoint.Capacity -
+              typeof item.RequestedSeats) */
+
+              console.log("Driver capactiy" , typeof theRequestedDriver[index].Capacity , " : " , theRequestedDriver[index].Capacity)
+
+              console.log("Passenger Request" , typeof item.RequestedSeats , " : " , item.RequestedSeats)
+              driverDocRef
+                .update({
+                  Capacity:
+                    theRequestedDriver[index].Capacity - item.RequestedSeats,
+                  /* key2: value2, */
+                })
+                .then(() => {
+                  console.log('Document updated successfully!');
+                })
+                .catch(error => {
+                  console.error('Error updating document: ', error);
+                });
+
               setRequestStatus(!requestStatus);
             }}
             style={{
               position: 'absolute',
-              bottom: 50,
+              bottom: 40,
               right: 15,
               width: 363,
               height: 50,
@@ -217,7 +265,7 @@ export default function RideStatus() {
                 fontWeight: 'bold',
                 textTransform: 'uppercase',
               }}>
-              {requestStatus ? 'Request Accepted' : 'Accept Request'}
+              {requestStatus ? 'Request Accepted123' : 'Accept Request123'}
             </Text>
           </TouchableOpacity>
           {/* <View style={styles.seatAvailable}>
@@ -295,16 +343,30 @@ export default function RideStatus() {
       ); */
 
       setTheRequestedDriver(
-        dataArray.filter(data =>
-          driverDataFromFirebase.some(driver => driver.id === data.DriverDocumentId)
-        ).map(data =>
-          driverDataFromFirebase.find(driver => driver.id === data.DriverDocumentId)
-        )
+        dataArray
+          .filter(data =>
+            driverDataFromFirebase.some(
+              driver => driver.id === data.DriverDocumentId,
+            ),
+          )
+          .map(data =>
+            driverDataFromFirebase.find(
+              driver => driver.id === data.DriverDocumentId,
+            ),
+          ),
       );
 
       if (theRequestedDriver.length != 0) {
-        console.log(`I AM FIRST DRIVER ${theRequestedDriver[0].id ? theRequestedDriver[0].id : 'false'}`);
-        console.log(`I AM SECOND DRIVER  ${theRequestedDriver[1] ? theRequestedDriver[1].id : 'false'} `);
+        console.log(
+          `I AM FIRST DRIVER ${
+            theRequestedDriver[0].id ? theRequestedDriver[0].id : 'false'
+          }`,
+        );
+        console.log(
+          `I AM SECOND DRIVER  ${
+            theRequestedDriver[1] ? theRequestedDriver[1].id : 'false'
+          } `,
+        );
       }
     }
   }, [dataArray, driverDataFromFirebase]);
