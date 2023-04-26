@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   FlatList,
   View,
@@ -12,35 +12,54 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import ConfirmRideModal from '../components/ConfirmRideModal';
 
+//This is used to import and update data from LocationContext.js
+import LocationContext from '../Context/location/LocationContext';
+
 const {width} = Dimensions.get('window');
 
 const FlatListWithCards = () => {
+  /* This makes a connection between PassengerCOntact.js and LocationState.js.  */
+  const [
+    location,
+    setLocation,
+    dropOffLocation,
+    setDropOffLocation,
+    passengerDetails,
+    setPassengerDetails,
+    ride,
+    setRideType,
+    scheduleTime,
+    setScheduleTime,
+    kilometers,
+    setKilometers,
+  ] = useContext(LocationContext);
+
   const [dataArray, setDataArray] = useState([]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [profilePictureModal, setProfilePictureModal] = useState("")
+  const [profilePictureModal, setProfilePictureModal] = useState('');
 
-  const [driverDetails, setDriverDetails] = useState(null)
+  const [driverDetails, setDriverDetails] = useState(null);
 
   const [confirmRide, setConfirmRide] = useState(false);
 
-  const updateConfirmRide = (confirm) => {
+  const updateConfirmRide = confirm => {
     setConfirmRide(confirm);
   };
 
   useEffect(() => {
-  console.log("State was update: " + confirmRide)
-  }, [confirmRide])
-  
+    console.log('State was update: ' + confirmRide);
+  }, [confirmRide]);
 
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         style={styles.card}
-/*         onPress={() => {
+        /*         onPress={() => {
           alert(`Pressed on ${item.Name}`);
-        }} */ >
+        }} */
+      >
         <View style={styles.partition1}>
           <Image
             source={{uri: item.ProfilePictuer}}
@@ -81,7 +100,7 @@ const FlatListWithCards = () => {
                 style={styles.buttonVerify}
                 onPress={() => {
                   setIsModalVisible(true);
-                  setDriverDetails(item)
+                  setDriverDetails(item);
                 }}>
                 <Text style={styles.textButtonVerify}>Request A Ride</Text>
               </TouchableOpacity>
@@ -93,9 +112,13 @@ const FlatListWithCards = () => {
   };
 
   useEffect(() => {
-    const collectionRef = firestore().collection('RidesPostedByDriver'); // your collection reference here
+    let collectionRef = firestore().collection('RidesPostedByDriver'); // your collection reference here
+
+    console.log("Vehiucle" , ride.vehicleType)
+
     collectionRef
-      /* .where('VehicleType', '==', 'Bike') */
+      .where('Capacity', '>', 0)
+      .where("VehicleType", '==' , ride.vehicleType)
       .get()
       .then(querySnapshot => {
         const dataArray = [];
@@ -117,12 +140,14 @@ const FlatListWithCards = () => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.contentContainer}
       />
-      {driverDetails && (<ConfirmRideModal
-        isVisible={isModalVisible}
-        closeModal={() => setIsModalVisible(false)}
-        profile = {driverDetails}
-        updateConfirmRide = {updateConfirmRide}
-      />)}
+      {driverDetails && (
+        <ConfirmRideModal
+          isVisible={isModalVisible}
+          closeModal={() => setIsModalVisible(false)}
+          profile={driverDetails}
+          updateConfirmRide={updateConfirmRide}
+        />
+      )}
     </View>
   );
 };
@@ -238,7 +263,6 @@ const styles = StyleSheet.create({
 });
 
 export default FlatListWithCards;
-
 
 /* const renderItem = ({item}) => {
 
