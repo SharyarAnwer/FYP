@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as React from 'react';
+
 import {View, LogBox} from 'react-native';
 import Page1 from './screen/page1';
 /* import Page2 from './screen/page2'; */
@@ -30,6 +31,10 @@ import RideStatus from './components/RideStatus';
 
 import PassengerRideStatus from './components/PassengerRideStatus';
 
+import { requestUserPermission , notificationListener } from './utilities/notificationServices';
+import { useEffect } from 'react';
+import Testing from './screen/Testing';
+
 export default function App() {
   /*  */
   const Stack = createNativeStackNavigator();
@@ -38,6 +43,11 @@ export default function App() {
     'Non-serializable values were found in the navigation state',
   ]);
 
+  useEffect(() => {
+    requestUserPermission()
+    notificationListener()
+  }, [])
+  
   return (
     <DriverState>
       <LocationState>
@@ -115,6 +125,12 @@ export default function App() {
               options={{headerShown: false}}
               name="Passenger Ride Status"
               component={PassengerRideStatus}
+            />
+
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Testing"
+              component={Testing}
             />
 
           </Stack.Navigator>

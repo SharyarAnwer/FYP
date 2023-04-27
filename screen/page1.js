@@ -128,6 +128,12 @@ export default function Page1({navigation}) {
           <Text style={page1styling.buttonText}>Let's Go!</Text>
         </View>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => {
+        navigation.navigate('Testing')
+      }}>
+        <Text>TEST THIS OUT!</Text>
+      </TouchableOpacity>
     </View>
   );
 }
