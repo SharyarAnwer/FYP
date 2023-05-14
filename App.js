@@ -31,9 +31,12 @@ import RideStatus from './components/RideStatus';
 
 import PassengerRideStatus from './components/PassengerRideStatus';
 
-import { requestUserPermission , notificationListener } from './utilities/notificationServices';
+import { requestUserPermission , notificationListener } from './utilities/Notification';
+
 import { useEffect } from 'react';
 import Testing from './screen/Testing';
+
+import AdminPortal from './screen/AdminPortal';
 
 export default function App() {
   /*  */
@@ -131,6 +134,12 @@ export default function App() {
               options={{headerShown: false}}
               name="Testing"
               component={Testing}
+            />
+
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="AdminPortal"
+              component={AdminPortal}
             />
 
           </Stack.Navigator>

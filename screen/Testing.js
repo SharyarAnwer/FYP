@@ -36,6 +36,8 @@ export default function Testing() {
             allowWhileIdle : true,
             color : "red"
         })
+
+        console.log(new Date(Date.now()) );
     }
   return (
     <View>

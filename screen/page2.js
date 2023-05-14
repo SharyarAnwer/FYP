@@ -221,30 +221,35 @@ export default function Page2() {
             color={'#4772FF'}
             size={30}></AntDesign>
 
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("Passenger Ride Status" , {
-              name: route.params.name,
-              email: route.params.email,
-              image: imageUrl,
-            })
-           }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Passenger Ride Status', {
+                name: route.params.name,
+                email: route.params.email,
+                image: imageUrl,
+              });
+            }}>
             <Text style={page2styling.signOut}>Passenger's Request</Text>
           </TouchableOpacity>
 
-          <View style = {{width: '100%' , backgroundColor: '#ffffff' , height: 1}} />
-          
-          <TouchableOpacity 
-           onPress={() => {
-            navigation.navigate("Ride Status" , {
-              name: route.params.name,
-              email: route.params.email,
-              image: imageUrl,
-            })
-           }}>
+          <View
+            style={{width: '100%', backgroundColor: '#ffffff', height: 1}}
+          />
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Ride Status', {
+                name: route.params.name,
+                email: route.params.email,
+                image: imageUrl,
+              });
+            }}>
             <Text style={page2styling.signOut}>Driver's Request</Text>
           </TouchableOpacity>
 
-          <View style = {{width: '100%' , backgroundColor: '#ffffff' , height: 1}} />
+          <View
+            style={{width: '100%', backgroundColor: '#ffffff', height: 1}}
+          />
 
           <TouchableOpacity
             style={page2styling.option1}
@@ -260,6 +265,20 @@ export default function Page2() {
           </TouchableOpacity>
         </View>
       )}
+
+      <TouchableOpacity
+        style={{position: 'absolute', bottom: 20}}
+        onPress={() => {
+          navigation.navigate('AdminPortal', {
+            name: route.params.name,
+            email: route.params.email,
+            image: imageUrl,
+          });
+        }}>
+        <Text style={{color: '#4772FF', fontSize: 14}}>
+          Click Here To Visit The Admin Portal
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

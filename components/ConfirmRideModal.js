@@ -1,10 +1,13 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {Modal, View, Text, TouchableOpacity, Image} from 'react-native';
 
 //This is used to import and update data from LocationContext.js
 import LocationContext from '../Context/location/LocationContext';
 
 import firestore from '@react-native-firebase/firestore';
+
+/* This import is used to show notification. */
+import PushNotification from 'react-native-push-notification';
 
 export default function ConfirmRideModal({
   isVisible,
@@ -25,7 +28,7 @@ export default function ConfirmRideModal({
     scheduleTime,
     setScheduleTime,
     kilometers,
-    setKilometers
+    setKilometers,
   ] = useContext(LocationContext);
 
   const [confirmRequest, setConfirmRequest] = useState(false);
@@ -39,6 +42,18 @@ export default function ConfirmRideModal({
   const decrement = () => {
     setCount(count - 1);
   };
+
+  /* This is used to create a channel that will show notification */
+  const createChannel = () => {
+    PushNotification.createChannel({
+      channelId: 'test-channel',
+      channelName: 'test channel',
+    });
+  };
+
+  useEffect(() => {
+    createChannel();
+  }, []);
 
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
@@ -219,14 +234,43 @@ export default function ConfirmRideModal({
                     PassengerPickupTime: scheduleTime.time,
                     RequestedSeats: count,
                     DriverName: profile.Name,
-                    Status : 'Pending',
-                    DriverDocumentId : profile.id,
-                    collectionId : 'RidesPostedByDriver',
+                    Status: 'Pending',
+                    DriverDocumentId: profile.id,
+                    collectionId: 'RidesPostedByDriver',
                     distance: kilometers,
                     vehicleType: ride.vehicleType,
-                    payment: ride.vehicleType === 'Bike' ? kilometers * 50 : kilometers * 100 
+                    payment:
+                      ride.vehicleType === 'Bike'
+                        ? kilometers * 50
+                        : kilometers * 100,
                   })
                   .then(() => {
+
+                    /* Show a confirmation notification to the user that his ride has been booked */
+
+                    PushNotification.localNotification({
+                      channelId: 'test-channel',
+                      title: 'Your ride has been posted',
+                      message: '',
+                      color: 'red',
+                    });
+
+                    /* This will produce a notification for the user on the day on which the ride was booked. */
+                    /* const [day, month, year] = scheduleTime.date.split('/');
+                    console.log("Day: " , day , "Type" , typeof parseInt(day))
+                    console.log("Month: " , month , "Type" , typeof parseInt(month))
+                    console.log("Year: " , year , "Type" , typeof parseInt(year))
+
+                    PushNotification.localNotificationSchedule({
+                      channelId: 'test-channel',
+                      title: 'Reminder:',
+                      message: `You have a ride booked today at: ${day}/${month}/${year+2}` ,
+                      date: new Date(parseInt(year) , parseInt(month) , parseInt(day) , 17 , 0, 0),
+                      allowWhileIdle: true,
+                      color: 'red',
+                    }); */
+
+                    console.log("New Date" , new Date(2023 , 3 , 15 , 16 , 27, 0));
                     console.log('User added successfully!');
                   });
               }}>

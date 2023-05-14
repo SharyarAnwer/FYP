@@ -114,7 +114,7 @@ const FlatListWithCards = () => {
   useEffect(() => {
     let collectionRef = firestore().collection('RidesPostedByDriver'); // your collection reference here
 
-    console.log("Vehiucle" , ride.vehicleType)
+    /* console.log("Vehiucle" , ride.vehicleType) */
 
     collectionRef
       .where('Capacity', '>', 0)
