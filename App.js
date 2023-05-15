@@ -23,7 +23,7 @@ import LocationState from '../FYP/Context/location/LocationState';
 
 import DriverState from '../FYP/Context/driver/DriverState';
 
-import DriverBooking from '../FYP/screen/DriverBooking'
+import DriverBooking from '../FYP/screen/DriverBooking';
 
 import DriverContact from './screen/DriverContact';
 
@@ -31,12 +31,17 @@ import RideStatus from './components/RideStatus';
 
 import PassengerRideStatus from './components/PassengerRideStatus';
 
-import { requestUserPermission , notificationListener } from './utilities/Notification';
+import {
+  requestUserPermission,
+  notificationListener,
+} from './utilities/Notification';
 
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import Testing from './screen/Testing';
 
 import AdminPortal from './screen/AdminPortal';
+
+import {NativeBaseProvider} from 'native-base';
 
 export default function App() {
   /*  */
@@ -47,104 +52,105 @@ export default function App() {
   ]);
 
   useEffect(() => {
-    requestUserPermission()
-    notificationListener()
-  }, [])
-  
+    requestUserPermission();
+    notificationListener();
+  }, []);
+
   return (
-    <DriverState>
-      <LocationState>
-        <NavigationContainer>
-          <Stack.Navigator>
-            {/* The above two tags: <NavigationContainer> & <Stack.Navigator> are used to tell the app that following screens will have to be navigated.*/}
+    <NativeBaseProvider>
+      <DriverState>
+        <LocationState>
+          <NavigationContainer>
+            <Stack.Navigator>
+              {/* The above two tags: <NavigationContainer> & <Stack.Navigator> are used to tell the app that following screens will have to be navigated.*/}
 
-            {/* The <Stack.Screen> tag defines which screens are to be navigated. The first screen which will be displayed is Home screen because it is at the top of the stack initially.
-             */}
-            {/* Initially a header was shown on the top of page 1. It was not needed. So to remove the header we used options={{ headerShown: false}}.*/}
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Home"
-              component={Page1}
-            />
+              {/* The <Stack.Screen> tag defines which screens are to be navigated. The first screen which will be displayed is Home screen because it is at the top of the stack initially.
+               */}
+              {/* Initially a header was shown on the top of page 1. It was not needed. So to remove the header we used options={{ headerShown: false}}.*/}
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Home"
+                component={Page1}
+              />
 
-            {/* Select category screen will come next when the user taps on 'Let's Go' Button. The mecahnism of going to the next screen is defined in page1.js file.*/}
-            {/* Initially a header was shown on the top of page 2. It was not needed. So to remove the header we used options={{ headerShown: false}}.*/}
+              {/* Select category screen will come next when the user taps on 'Let's Go' Button. The mecahnism of going to the next screen is defined in page1.js file.*/}
+              {/* Initially a header was shown on the top of page 2. It was not needed. So to remove the header we used options={{ headerShown: false}}.*/}
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Select Category"
-              component={Page2}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Select Category"
+                component={Page2}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Driver Info"
-              component={DriverInfo}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Driver Info"
+                component={DriverInfo}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Passenger Contact"
-              component={PassengerContact}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Passenger Contact"
+                component={PassengerContact}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Verification"
-              component={Verification}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Verification"
+                component={Verification}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Book A Ride"
-              component={Booking}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Book A Ride"
+                component={Booking}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Available Drivers"
-              component={AvailableDrivers}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Available Drivers"
+                component={AvailableDrivers}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Driver Booking"
-              component={DriverBooking}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Driver Booking"
+                component={DriverBooking}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Driver Contact"
-              component={DriverContact}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Driver Contact"
+                component={DriverContact}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Ride Status"
-              component={RideStatus}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Ride Status"
+                component={RideStatus}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Passenger Ride Status"
-              component={PassengerRideStatus}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Passenger Ride Status"
+                component={PassengerRideStatus}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="Testing"
-              component={Testing}
-            />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Testing"
+                component={Testing}
+              />
 
-            <Stack.Screen
-              options={{headerShown: false}}
-              name="AdminPortal"
-              component={AdminPortal}
-            />
-
-          </Stack.Navigator>
-        </NavigationContainer>
-      </LocationState>
-    </DriverState>
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="AdminPortal"
+                component={AdminPortal}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </LocationState>
+      </DriverState>
+    </NativeBaseProvider>
   );
 }
