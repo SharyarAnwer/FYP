@@ -269,7 +269,7 @@ export default function Page2() {
       <TouchableOpacity
         style={{position: 'absolute', bottom: 20}}
         onPress={() => {
-          navigation.navigate('AdminPortal', {
+          navigation.navigate('Pending Drivers', {
             name: route.params.name,
             email: route.params.email,
             image: imageUrl,

@@ -43,6 +43,8 @@ import AdminPortal from './screen/AdminPortal';
 
 import {NativeBaseProvider} from 'native-base';
 
+import PendingDrivers from './screen/AdminPortal/PendingDrivers';
+
 export default function App() {
   /*  */
   const Stack = createNativeStackNavigator();
@@ -146,6 +148,12 @@ export default function App() {
                 options={{headerShown: false}}
                 name="AdminPortal"
                 component={AdminPortal}
+              />
+
+              <Stack.Screen
+                options={{headerShown: false}}
+                name="Pending Drivers"
+                component={PendingDrivers}
               />
             </Stack.Navigator>
           </NavigationContainer>
