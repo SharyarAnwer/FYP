@@ -52,6 +52,22 @@ const PendingDrivers = () => {
     setModalVisible(true);
   };
 
+  const updateDocument = (id, newStatus) => {
+    const driverRef = firestore().collection('Drivers');
+    const driverDocRef = driverRef.doc(id);
+
+    driverDocRef
+      .update({
+        profileStatus: newStatus
+      })
+      .then(() => {
+        alert('Driver has been verified successfully!');
+      })
+      .catch(error => {
+        alert('Error updating document: ', error);
+      });
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container} vertical>
       <View style={styles.cardsContainer}>
@@ -107,16 +123,12 @@ const PendingDrivers = () => {
                 <View style={styles.validButtonContainer}>
                   <TouchableOpacity
                     style={styles.validButton}
-
-                    onPress={() => {
-                      alert(card.id)
-                    }}
-                  >
+                    onPress={() => updateDocument(card.id, 'Verified123')}>
                     <Icon name="checkmark-outline" size={24} color="#fff" />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.validButton}
-                  >
+                    onPress={() => updateDocument(card.id, 'Unverified')}>
                     <Icon name="close-outline" size={24} color="#fff" />
                   </TouchableOpacity>
                 </View>
