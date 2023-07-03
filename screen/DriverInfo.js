@@ -190,7 +190,8 @@ export default function PassengerInfo() {
           ProfilePicture: driverDetails.profilePicture,
           Department: driverDetails.emailAddress.substring(0, 2),
           SZABISTid: driverDetails.emailAddress.substring(2, 9),
-          profileStatus: 'Verified',
+          /* profileStatus: 'Verified', */
+          profileStatus: 'Pending',
           VehicleName: vehicleName,
           VehicleModel: vehicleModel,
           VehicleNumber: vehicleNumber,

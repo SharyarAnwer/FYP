@@ -169,7 +169,7 @@ export default function RideOptionsCard() {
             </View>
 
             <Text style={styles.money}>Rs
-              {title === 'Bike' ? kilometers * 50 : kilometers * 100}
+              {title === 'Bike' ? kilometers * 10 : kilometers * 50}
             </Text>
           </TouchableOpacity>
         )}

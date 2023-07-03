@@ -21,8 +21,8 @@ const PendingDrivers = () => {
     let collectionRef = firestore().collection('Drivers'); // your collection reference here
 
     collectionRef
-      /* .where('Capacity', '>', 0)
-      .where("VehicleType", '==' , ride.vehicleType) */
+      /* .where('Capacity', '>', 0) */
+      .where("profileStatus", '==' , "Pending")
       .get()
       .then(querySnapshot => {
         const dataArray = [];
@@ -123,7 +123,7 @@ const PendingDrivers = () => {
                 <View style={styles.validButtonContainer}>
                   <TouchableOpacity
                     style={styles.validButton}
-                    onPress={() => updateDocument(card.id, 'Verified123')}>
+                    onPress={() => updateDocument(card.id, 'Verified')}>
                     <Icon name="checkmark-outline" size={24} color="#fff" />
                   </TouchableOpacity>
                   <TouchableOpacity
